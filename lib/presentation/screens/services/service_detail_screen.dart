@@ -117,7 +117,8 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                       if (service.reviewsCount != null)
                         Text(
                           ' (${service.reviewsCount})',
-                          style: TextStyle(color: AppColors.textSecondary),
+                          style:
+                              const TextStyle(color: AppColors.textSecondary),
                         ),
                     ],
                   ],
@@ -149,7 +150,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                       const SizedBox(width: 8),
                       Text(
                         service.priceTypeName,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           color: AppColors.textSecondary,
                         ),
@@ -177,7 +178,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                 const SizedBox(height: 8),
                 Text(
                   service.description ?? 'Sem descrição',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 15,
                     color: AppColors.textSecondary,
                     height: 1.5,
@@ -216,12 +217,13 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             children: [
                               Text(
                                 service.providerName!,
-                                style: const TextStyle(fontWeight: FontWeight.w600),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w600),
                               ),
                               if (service.zoneName != null)
                                 Text(
                                   service.zoneName!,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: AppColors.textSecondary,
                                     fontSize: 13,
                                   ),
@@ -293,18 +295,21 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            const Text('Em breve você poderá agendar serviços diretamente pelo app!'),
+            const Text(
+                'Em breve você poderá agendar serviços diretamente pelo app!'),
             const SizedBox(height: 24),
             CustomButton(
               text: 'Entrar em Contato',
               icon: Icons.chat,
               onPressed: () {
                 Navigator.pop(context);
-                final service = context.read<ServicesProvider>().selectedService;
+                final service =
+                    context.read<ServicesProvider>().selectedService;
                 if (service?.providerEmail != null) {
                   Helpers.openWhatsApp(
                     service!.providerEmail!,
-                    message: 'Olá! Gostaria de agendar o serviço "${service.title}" do POLYS.',
+                    message:
+                        'Olá! Gostaria de agendar o serviço "${service.title}" do POLYS.',
                   );
                 }
               },
@@ -317,4 +322,3 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     );
   }
 }
-

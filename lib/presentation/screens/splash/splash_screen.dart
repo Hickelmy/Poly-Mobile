@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../routes/app_routes.dart';
 import '../../providers/auth_provider.dart';
@@ -54,6 +55,16 @@ class _SplashScreenState extends State<SplashScreen>
 
     // Espera a animação inicial
     await Future.delayed(const Duration(milliseconds: 1000));
+
+    // Verifica permissão de localização ANTES de tudo
+    final locationStatus = await Permission.location.status;
+    if (!locationStatus.isGranted) {
+      // Se não tem permissão, redireciona para tela de permissão
+      if (mounted) {
+        AppRoutes.navigateAndClear(AppRoutes.locationPermission);
+      }
+      return;
+    }
 
     // Inicializa autenticação
     await authProvider.initialize();

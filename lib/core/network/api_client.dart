@@ -236,7 +236,13 @@ class ApiClient {
         return ForbiddenException(message: message);
         
       case 404:
-        return NotFoundException(message: message);
+        // Melhora a mensagem de erro 404
+        String errorMessage = message.toString();
+        if (errorMessage.contains('Cannot GET') || errorMessage.contains('Cannot POST') || 
+            errorMessage.contains('Cannot PUT') || errorMessage.contains('Cannot DELETE')) {
+          errorMessage = 'Recurso não encontrado. Verifique se o servidor está configurado corretamente.';
+        }
+        return NotFoundException(message: errorMessage);
         
       case 422:
         return ValidationException(

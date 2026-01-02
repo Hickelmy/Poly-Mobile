@@ -68,7 +68,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 expandedHeight: 120,
                 floating: true,
                 pinned: true,
-                backgroundColor: isDark ? AppColors.slate900 : AppColors.surface,
+                backgroundColor:
+                    isDark ? AppColors.slate900 : AppColors.surface,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(
                     decoration: BoxDecoration(
@@ -96,7 +97,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Helpers.getGreeting(),
                         style: TextStyle(
                           fontSize: 14,
-                          color: isDark ? AppColors.slate400 : AppColors.slate600,
+                          color:
+                              isDark ? AppColors.slate400 : AppColors.slate600,
                           fontWeight: FontWeight.normal,
                         ),
                       ),
@@ -105,48 +107,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
-                          color: isDark ? AppColors.slate50 : AppColors.slate900,
+                          color:
+                              isDark ? AppColors.slate50 : AppColors.slate900,
                         ),
                       ),
                     ],
                   ),
                 ),
-              actions: [
-                // Theme Toggle e Avatar juntos
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Theme Toggle
-                      const ThemeToggleButton(),
-                      const SizedBox(width: 8),
-                      // Avatar
-                      GestureDetector(
-                        onTap: () => AppRoutes.navigateTo(AppRoutes.profile),
-                        child: CircleAvatar(
-                          radius: 20,
-                          backgroundColor: AppColors.primary,
-                          backgroundImage: user?.avatarUrl != null
-                              ? NetworkImage(user!.avatarUrl!)
-                              : null,
-                          child: user?.avatarUrl == null
-                              ? Text(
-                                  Helpers.getInitials(user?.name ?? 'U'),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              : null,
+                actions: [
+                  // Theme Toggle e Avatar juntos
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Theme Toggle
+                        const ThemeToggleButton(),
+                        const SizedBox(width: 8),
+                        // Avatar
+                        GestureDetector(
+                          onTap: () => AppRoutes.navigateTo(AppRoutes.profile),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundColor: AppColors.primary,
+                            backgroundImage: user?.avatarUrl != null
+                                ? NetworkImage(user!.avatarUrl!)
+                                : null,
+                            child: user?.avatarUrl == null
+                                ? Text(
+                                    Helpers.getInitials(user?.name ?? 'U'),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                : null,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                    ],
+                        const SizedBox(width: 8),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
+                ],
+              );
             }),
 
             // Content
@@ -190,7 +193,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Expanded(
               child: KpiCard(
                 title: 'Minhas Doações',
-                value: Formatters.currencyCompact(projectsProvider.totalDonated),
+                value:
+                    Formatters.currencyCompact(projectsProvider.totalDonated),
                 icon: Icons.volunteer_activism,
                 color: AppColors.success,
               ),
@@ -218,7 +222,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
             const SizedBox(width: 12),
-            Expanded(
+            const Expanded(
               child: KpiCard(
                 title: 'Notificações',
                 value: '0',
@@ -536,7 +540,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: Text(
                         'Não',
                         style: TextStyle(
-                          color: isDark ? AppColors.slate400 : AppColors.slate600,
+                          color:
+                              isDark ? AppColors.slate400 : AppColors.slate600,
                         ),
                       ),
                     ),
@@ -587,7 +592,7 @@ class _QuickActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -596,14 +601,10 @@ class _QuickActionCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isDark 
-                ? color.withOpacity(0.15) 
-                : color.withOpacity(0.1),
+            color: isDark ? color.withOpacity(0.15) : color.withOpacity(0.1),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isDark 
-                  ? color.withOpacity(0.3) 
-                  : color.withOpacity(0.2),
+              color: isDark ? color.withOpacity(0.3) : color.withOpacity(0.2),
             ),
           ),
           child: Column(
@@ -612,8 +613,8 @@ class _QuickActionCard extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: isDark 
-                      ? color.withOpacity(0.25) 
+                  color: isDark
+                      ? color.withOpacity(0.25)
                       : color.withOpacity(0.15),
                   shape: BoxShape.circle,
                 ),
@@ -636,4 +637,3 @@ class _QuickActionCard extends StatelessWidget {
     );
   }
 }
-

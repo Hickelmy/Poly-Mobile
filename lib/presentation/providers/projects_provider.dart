@@ -18,7 +18,7 @@ class ProjectsProvider extends ChangeNotifier {
   List<ProjectPaymentModel> _userDonations = [];
   ProjectVoteModel? _userVote;
   bool _isLoading = false;
-  bool _isLoadingMore = false;
+  final bool _isLoadingMore = false;
   String? _error;
 
   // Filtros
@@ -182,13 +182,13 @@ class ProjectsProvider extends ChangeNotifier {
 
     try {
       final updated = await _projectRepository.updateProject(id, data);
-      
+
       // Atualiza na lista
       final index = _projects.indexWhere((p) => p.id == id);
       if (index != -1) {
         _projects[index] = updated;
       }
-      
+
       // Atualiza selecionado se for o mesmo
       if (_selectedProject?.id == id) {
         _selectedProject = updated;
@@ -214,7 +214,7 @@ class ProjectsProvider extends ChangeNotifier {
     try {
       await _projectRepository.deleteProject(id);
       _projects.removeWhere((p) => p.id == id);
-      
+
       if (_selectedProject?.id == id) {
         _selectedProject = null;
       }
@@ -275,7 +275,8 @@ class ProjectsProvider extends ChangeNotifier {
       _userVote = null;
 
       // Atualiza contagem de votos localmente
-      if (_selectedProject?.id == projectId && _selectedProject!.votesCount > 0) {
+      if (_selectedProject?.id == projectId &&
+          _selectedProject!.votesCount > 0) {
         _selectedProject = _selectedProject!.copyWith(
           votesCount: _selectedProject!.votesCount - 1,
         );
@@ -414,4 +415,3 @@ class ProjectsProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-

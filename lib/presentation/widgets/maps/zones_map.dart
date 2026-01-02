@@ -25,21 +25,20 @@ class ZonesMap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     // Calcular centro do mapa baseado nas zonas ou usar padrão
-    LatLng center = initialCenter ?? const LatLng(-23.5505, -46.6333); // São Paulo padrão
-    
+    LatLng center =
+        initialCenter ?? const LatLng(-23.5505, -46.6333); // São Paulo padrão
+
     if (zones.isNotEmpty) {
       final zonesWithCenter = zones.where((z) => z.hasCenter).toList();
       if (zonesWithCenter.isNotEmpty) {
-        double avgLat = zonesWithCenter
-            .map((z) => z.centerLat!)
-            .reduce((a, b) => a + b) /
-            zonesWithCenter.length;
-        double avgLng = zonesWithCenter
-            .map((z) => z.centerLng!)
-            .reduce((a, b) => a + b) /
-            zonesWithCenter.length;
+        double avgLat =
+            zonesWithCenter.map((z) => z.centerLat!).reduce((a, b) => a + b) /
+                zonesWithCenter.length;
+        double avgLng =
+            zonesWithCenter.map((z) => z.centerLng!).reduce((a, b) => a + b) /
+                zonesWithCenter.length;
         center = LatLng(avgLat, avgLng);
       }
     }
@@ -66,17 +65,18 @@ class ZonesMap extends StatelessWidget {
             onTap: (tapPosition, point) {
               // Verificar se clicou em alguma zona
               ZoneModel? tappedZone;
-              
+
               // Primeiro verifica se está dentro de algum polígono
               for (var zone in zones) {
                 if (zone.hasPolygon && zone.active) {
-                  if (_isPointInPolygon(point.latitude, point.longitude, zone.polygonGeojson!)) {
+                  if (_isPointInPolygon(
+                      point.latitude, point.longitude, zone.polygonGeojson!)) {
                     tappedZone = zone;
                     break;
                   }
                 }
               }
-              
+
               // Se não encontrou por polígono, verifica proximidade do centro
               if (tappedZone == null) {
                 for (var zone in zones) {
@@ -93,7 +93,7 @@ class ZonesMap extends StatelessWidget {
                   }
                 }
               }
-              
+
               if (tappedZone != null && onZoneTap != null) {
                 onZoneTap!(tappedZone);
               }
@@ -106,13 +106,12 @@ class ZonesMap extends StatelessWidget {
               userAgentPackageName: 'com.polys.mobile',
               maxZoom: 19,
             ),
-            
+
             // Zonas como polígonos ou marcadores
             if (zones.isNotEmpty)
               PolygonLayer(
-                polygons: zones
-                    .where((z) => z.hasPolygon && z.active)
-                    .map((zone) {
+                polygons:
+                    zones.where((z) => z.hasPolygon && z.active).map((zone) {
                   // Extrair coordenadas do GeoJSON
                   List<LatLng> points = [];
                   if (zone.polygonGeojson != null) {
@@ -132,11 +131,11 @@ class ZonesMap extends StatelessWidget {
                       }
                     }
                   }
-                  
+
                   // Se não tem polígono mas tem centro, criar um círculo pequeno
                   if (points.isEmpty && zone.hasCenter) {
                     // Criar um círculo ao redor do centro
-                    final radius = 0.01; // ~1km
+                    const radius = 0.01; // ~1km
                     for (int i = 0; i < 32; i++) {
                       final angle = (i * 360 / 32) * math.pi / 180;
                       points.add(LatLng(
@@ -145,7 +144,7 @@ class ZonesMap extends StatelessWidget {
                       ));
                     }
                   }
-                  
+
                   return Polygon(
                     points: points,
                     color: _parseColor(zone.color).withOpacity(0.3),
@@ -155,13 +154,12 @@ class ZonesMap extends StatelessWidget {
                   );
                 }).toList(),
               ),
-            
+
             // Marcadores de centro das zonas
             if (zones.isNotEmpty)
               MarkerLayer(
-                markers: zones
-                    .where((z) => z.hasCenter && z.active)
-                    .map((zone) {
+                markers:
+                    zones.where((z) => z.hasCenter && z.active).map((zone) {
                   return Marker(
                     point: LatLng(zone.centerLat!, zone.centerLng!),
                     width: 40,
@@ -232,10 +230,18 @@ class ZonesMap extends StatelessWidget {
       // Algoritmo ray casting
       bool inside = false;
       for (int i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-        final xi = polygon[i][0] is num ? polygon[i][0].toDouble() : double.parse(polygon[i][0].toString());
-        final yi = polygon[i][1] is num ? polygon[i][1].toDouble() : double.parse(polygon[i][1].toString());
-        final xj = polygon[j][0] is num ? polygon[j][0].toDouble() : double.parse(polygon[j][0].toString());
-        final yj = polygon[j][1] is num ? polygon[j][1].toDouble() : double.parse(polygon[j][1].toString());
+        final xi = polygon[i][0] is num
+            ? polygon[i][0].toDouble()
+            : double.parse(polygon[i][0].toString());
+        final yi = polygon[i][1] is num
+            ? polygon[i][1].toDouble()
+            : double.parse(polygon[i][1].toString());
+        final xj = polygon[j][0] is num
+            ? polygon[j][0].toDouble()
+            : double.parse(polygon[j][0].toString());
+        final yj = polygon[j][1] is num
+            ? polygon[j][1].toDouble()
+            : double.parse(polygon[j][1].toString());
 
         final intersect = ((yi > lng) != (yj > lng)) &&
             (lat < (xj - xi) * (lng - yi) / (yj - yi) + xi);
@@ -248,4 +254,3 @@ class ZonesMap extends StatelessWidget {
     }
   }
 }
-

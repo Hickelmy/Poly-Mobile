@@ -34,7 +34,7 @@ class LoadingWidget extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               message!,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 14,
               ),
@@ -142,4 +142,3 @@ class LoadingOverlay extends StatelessWidget {
     );
   }
 }
-

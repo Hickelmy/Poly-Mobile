@@ -114,6 +114,11 @@ class AuthProvider extends ChangeNotifier {
       _status = AuthStatus.authenticated;
       notifyListeners();
       return true;
+    } on NetworkException {
+      _error = 'Não foi possível conectar ao servidor. Verifique sua conexão e se o servidor está rodando.';
+      _status = AuthStatus.error;
+      notifyListeners();
+      return false;
     } on InvalidCredentialsException catch (e) {
       _error = e.message;
       _status = AuthStatus.error;
@@ -161,6 +166,11 @@ class AuthProvider extends ChangeNotifier {
       _status = AuthStatus.authenticated;
       notifyListeners();
       return true;
+    } on NetworkException {
+      _error = 'Não foi possível conectar ao servidor. Verifique sua conexão e se o servidor está rodando.';
+      _status = AuthStatus.error;
+      notifyListeners();
+      return false;
     } on ValidationException catch (e) {
       _error = e.message;
       _status = AuthStatus.error;

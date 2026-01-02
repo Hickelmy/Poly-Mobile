@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/utils/validators.dart';
@@ -21,6 +22,21 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLocationPermission();
+  }
+
+  Future<void> _checkLocationPermission() async {
+    final status = await Permission.location.status;
+    if (!status.isGranted) {
+      if (mounted) {
+        AppRoutes.navigateAndClear(AppRoutes.locationPermission);
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -56,12 +72,12 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           gradient: isDark
-              ? LinearGradient(
+              ? const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
@@ -153,16 +169,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       prefixIcon: Icons.lock_outline,
                       suffixIcon: Builder(
                         builder: (context) {
-                          final isDark = Theme.of(context).brightness == Brightness.dark;
+                          final isDark =
+                              Theme.of(context).brightness == Brightness.dark;
                           return IconButton(
                             icon: Icon(
                               _obscurePassword
                                   ? Icons.visibility_outlined
                                   : Icons.visibility_off_outlined,
-                              color: isDark ? AppColors.slate400 : AppColors.slate600,
+                              color: isDark
+                                  ? AppColors.slate400
+                                  : AppColors.slate600,
                             ),
                             onPressed: () {
-                              setState(() => _obscurePassword = !_obscurePassword);
+                              setState(
+                                  () => _obscurePassword = !_obscurePassword);
                             },
                           );
                         },
@@ -193,7 +213,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         Text(
                           AppStrings.noAccount,
                           style: TextStyle(
-                            color: isDark ? AppColors.slate400 : AppColors.slate600,
+                            color: isDark
+                                ? AppColors.slate400
+                                : AppColors.slate600,
                           ),
                         ),
                         TextButton(
@@ -219,4 +241,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-

@@ -69,7 +69,7 @@ class _ProjectCardState extends State<ProjectCard> {
     // Calcular votos (assumindo que temos up_votes e down_votes no modelo)
     final upVotes =
         widget.project.votesCount; // Simplificado - ajustar conforme modelo
-    final downVotes = 0; // Ajustar conforme modelo real
+    const downVotes = 0; // Ajustar conforme modelo real
     final totalVotes = upVotes + downVotes;
     final diff = upVotes - downVotes;
     final remainingVotes =
@@ -382,7 +382,7 @@ class _ProjectCardState extends State<ProjectCard> {
                         const SizedBox(height: 4),
                         Text(
                           'Faltam $remainingVotes votos positivos para liberar doações.',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 10,
                             color: AppColors.warning,
                             fontWeight: FontWeight.w500,
@@ -407,7 +407,7 @@ class _ProjectCardState extends State<ProjectCard> {
                           Text(
                             Formatters.currencyCompact(
                                 widget.project.currentAmount),
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               color: AppColors.emerald500,

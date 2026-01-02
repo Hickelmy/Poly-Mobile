@@ -75,6 +75,11 @@ class ProductsProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return _selectedProduct;
+    } on NotFoundException {
+      _error = 'Produto não encontrado';
+      _isLoading = false;
+      notifyListeners();
+      return null;
     } on AppException catch (e) {
       _error = e.message;
       _isLoading = false;

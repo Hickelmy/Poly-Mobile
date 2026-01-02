@@ -10,9 +10,9 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      
+
       // Cores
-      colorScheme: ColorScheme.light(
+      colorScheme: const ColorScheme.light(
         primary: AppColors.primary,
         onPrimary: AppColors.textOnPrimary,
         primaryContainer: AppColors.primaryLight,
@@ -24,9 +24,9 @@ class AppTheme {
         error: AppColors.error,
         onError: AppColors.textOnPrimary,
       ),
-      
+
       scaffoldBackgroundColor: AppColors.background,
-      
+
       // AppBar
       appBarTheme: const AppBarTheme(
         elevation: 0,
@@ -43,7 +43,7 @@ class AppTheme {
           color: AppColors.textPrimary,
         ),
       ),
-      
+
       // Bottom Navigation
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.surface,
@@ -59,7 +59,7 @@ class AppTheme {
           fontSize: 12,
         ),
       ),
-      
+
       // Card
       cardTheme: CardThemeData(
         elevation: 0,
@@ -70,7 +70,7 @@ class AppTheme {
         color: AppColors.surface,
         clipBehavior: Clip.antiAlias,
       ),
-      
+
       // Elevated Button
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -87,7 +87,7 @@ class AppTheme {
           ),
         ),
       ),
-      
+
       // Outlined Button
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
@@ -103,7 +103,7 @@ class AppTheme {
           ),
         ),
       ),
-      
+
       // Text Button
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
@@ -114,12 +114,13 @@ class AppTheme {
           ),
         ),
       ),
-      
+
       // Input Decoration
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.surfaceVariant,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -151,7 +152,7 @@ class AppTheme {
         prefixIconColor: AppColors.textSecondary,
         suffixIconColor: AppColors.textSecondary,
       ),
-      
+
       // Floating Action Button
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: AppColors.primary,
@@ -159,7 +160,7 @@ class AppTheme {
         elevation: 4,
         shape: CircleBorder(),
       ),
-      
+
       // Chip
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.surfaceVariant,
@@ -173,7 +174,7 @@ class AppTheme {
         ),
         side: const BorderSide(color: AppColors.border),
       ),
-      
+
       // Dialog
       dialogTheme: DialogThemeData(
         backgroundColor: AppColors.surface,
@@ -186,7 +187,7 @@ class AppTheme {
           fontWeight: FontWeight.w600,
         ),
       ),
-      
+
       // Bottom Sheet
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: AppColors.surface,
@@ -194,7 +195,7 @@ class AppTheme {
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
       ),
-      
+
       // Snackbar
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.surfaceDark,
@@ -204,13 +205,13 @@ class AppTheme {
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-      
+
       // Progress Indicator
       progressIndicatorTheme: const ProgressIndicatorThemeData(
         color: AppColors.primary,
         linearTrackColor: AppColors.border,
       ),
-      
+
       // Switch
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {
@@ -226,21 +227,21 @@ class AppTheme {
           return AppColors.border;
         }),
       ),
-      
+
       // Divider
       dividerTheme: const DividerThemeData(
         color: AppColors.divider,
         thickness: 1,
         space: 1,
       ),
-      
+
       // List Tile
       listTileTheme: const ListTileThemeData(
         contentPadding: EdgeInsets.symmetric(horizontal: 16),
         iconColor: AppColors.textSecondary,
         textColor: AppColors.textPrimary,
       ),
-      
+
       // Tab Bar
       tabBarTheme: const TabBarThemeData(
         labelColor: AppColors.primary,
@@ -263,8 +264,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      
-      colorScheme: ColorScheme.dark(
+      colorScheme: const ColorScheme.dark(
         primary: AppColors.teal500,
         onPrimary: AppColors.textOnPrimary,
         primaryContainer: AppColors.teal700,
@@ -274,11 +274,8 @@ class AppTheme {
         onSurface: AppColors.slate50,
         error: AppColors.error,
         onError: AppColors.textOnPrimary,
-        background: AppColors.slate950,
       ),
-      
       scaffoldBackgroundColor: AppColors.slate950,
-      
       appBarTheme: const AppBarTheme(
         elevation: 0,
         centerTitle: true,
@@ -294,7 +291,6 @@ class AppTheme {
           color: AppColors.slate50,
         ),
       ),
-      
       cardTheme: CardThemeData(
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -303,7 +299,6 @@ class AppTheme {
         color: AppColors.slate900,
         clipBehavior: Clip.antiAlias,
       ),
-      
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.slate900,
         selectedItemColor: AppColors.teal500,
@@ -318,7 +313,6 @@ class AppTheme {
           fontSize: 12,
         ),
       ),
-      
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.teal500,
@@ -334,7 +328,6 @@ class AppTheme {
           ),
         ),
       ),
-      
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.teal500,
@@ -349,7 +342,6 @@ class AppTheme {
           ),
         ),
       ),
-      
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: AppColors.teal500,
@@ -359,11 +351,11 @@ class AppTheme {
           ),
         ),
       ),
-      
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.slate800,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -395,14 +387,12 @@ class AppTheme {
         prefixIconColor: AppColors.slate400,
         suffixIconColor: AppColors.slate400,
       ),
-      
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: AppColors.teal500,
         foregroundColor: AppColors.textOnPrimary,
         elevation: 4,
         shape: CircleBorder(),
       ),
-      
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.slate800,
         selectedColor: AppColors.teal700,
@@ -415,7 +405,6 @@ class AppTheme {
         ),
         side: const BorderSide(color: AppColors.slate700),
       ),
-      
       dialogTheme: DialogThemeData(
         backgroundColor: AppColors.slate900,
         shape: RoundedRectangleBorder(
@@ -427,14 +416,12 @@ class AppTheme {
           fontWeight: FontWeight.w600,
         ),
       ),
-      
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: AppColors.slate900,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
       ),
-      
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.slate800,
         contentTextStyle: const TextStyle(color: AppColors.slate50),
@@ -443,12 +430,10 @@ class AppTheme {
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-      
       progressIndicatorTheme: const ProgressIndicatorThemeData(
         color: AppColors.teal500,
         linearTrackColor: AppColors.slate700,
       ),
-      
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
@@ -463,19 +448,16 @@ class AppTheme {
           return AppColors.slate700;
         }),
       ),
-      
       dividerTheme: const DividerThemeData(
         color: AppColors.slate700,
         thickness: 1,
         space: 1,
       ),
-      
       listTileTheme: const ListTileThemeData(
         contentPadding: EdgeInsets.symmetric(horizontal: 16),
         iconColor: AppColors.slate400,
         textColor: AppColors.slate50,
       ),
-      
       tabBarTheme: const TabBarThemeData(
         labelColor: AppColors.teal500,
         unselectedLabelColor: AppColors.slate400,
@@ -492,4 +474,3 @@ class AppTheme {
     );
   }
 }
-

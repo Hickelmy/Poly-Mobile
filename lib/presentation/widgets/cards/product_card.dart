@@ -109,65 +109,50 @@ class ProductCard extends StatelessWidget {
                 ),
               ),
               // Content
-              Padding(
-                padding: EdgeInsets.all(isCompact ? 10 : 12),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      product.title,
-                      style: TextStyle(
-                        fontSize: isCompact ? 13 : 14,
-                        fontWeight: FontWeight.w600,
-                        color: isDark ? AppColors.slate100 : AppColors.textPrimary,
-                      ),
-                      maxLines: isCompact ? 1 : 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      Formatters.currency(product.price),
-                      style: TextStyle(
-                        fontSize: isCompact ? 15 : 18,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    if (!isCompact) ...[
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.inventory_2_outlined,
-                            size: 14,
-                            color: isDark ? AppColors.slate400 : AppColors.textSecondary,
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(isCompact ? 8 : 10),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          product.title,
+                          style: TextStyle(
+                            fontSize: isCompact ? 12 : 13,
+                            fontWeight: FontWeight.w600,
+                            color: isDark ? AppColors.slate100 : AppColors.textPrimary,
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${product.quantityAvailable} disponíveis',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: isDark ? AppColors.slate400 : AppColors.textSecondary,
-                            ),
-                          ),
-                        ],
+                          maxLines: isCompact ? 1 : 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                      if (product.sellerName != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        Formatters.currency(product.price),
+                        style: TextStyle(
+                          fontSize: isCompact ? 14 : 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      if (!isCompact) ...[
                         const SizedBox(height: 4),
                         Row(
                           children: [
                             Icon(
-                              Icons.person_outline,
-                              size: 14,
+                              Icons.inventory_2_outlined,
+                              size: 12,
                               color: isDark ? AppColors.slate400 : AppColors.textSecondary,
                             ),
                             const SizedBox(width: 4),
-                            Expanded(
+                            Flexible(
                               child: Text(
-                                product.sellerName!,
+                                '${product.quantityAvailable} disp.',
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   color: isDark ? AppColors.slate400 : AppColors.textSecondary,
                                 ),
                                 maxLines: 1,
@@ -178,7 +163,7 @@ class ProductCard extends StatelessWidget {
                         ),
                       ],
                     ],
-                  ],
+                  ),
                 ),
               ),
             ],

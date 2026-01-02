@@ -3,13 +3,13 @@ import 'package:permission_handler/permission_handler.dart';
 
 /// Serviço para obter localização do usuário
 class LocationService {
-  /// Verifica e solicita permissões de localização
+  /// Verifica e solicita permissões de localização (em tempo real)
   Future<bool> requestPermission() async {
     final status = await Permission.location.request();
     return status.isGranted;
   }
 
-  /// Verifica se tem permissão
+  /// Verifica se tem permissão de localização
   Future<bool> hasPermission() async {
     final status = await Permission.location.status;
     return status.isGranted;

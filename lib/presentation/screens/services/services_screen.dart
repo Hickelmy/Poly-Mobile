@@ -34,7 +34,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
     super.didChangeDependencies();
     final selectedZoneProvider = context.read<SelectedZoneProvider>();
     final currentZoneId = selectedZoneProvider.selectedZoneId;
-    
+
     // Só recarrega se a zona realmente mudou
     if (_lastZoneId != currentZoneId) {
       _lastZoneId = currentZoneId;
@@ -79,9 +79,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
       floatingActionButton: FloatingActionButton(
         heroTag: 'services_fab',
         onPressed: () => AppRoutes.navigateTo(AppRoutes.sellerDashboard),
-        child: const Icon(Icons.add),
         backgroundColor: AppColors.serviceColor,
         tooltip: 'Oferecer Serviço',
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -140,7 +140,8 @@ class _FilterSheet extends StatelessWidget {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 24),
-          const Text('Tipo de Serviço', style: TextStyle(fontWeight: FontWeight.w600)),
+          const Text('Tipo de Serviço',
+              style: TextStyle(fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -207,4 +208,3 @@ class _FilterChip extends StatelessWidget {
     );
   }
 }
-

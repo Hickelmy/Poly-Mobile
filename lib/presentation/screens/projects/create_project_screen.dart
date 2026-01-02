@@ -21,7 +21,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
   final _descriptionController = TextEditingController();
   final _targetAmountController = TextEditingController();
   final _minVotesController = TextEditingController(text: '10');
-  
+
   String? _selectedCategory;
   final List<String> _categories = [
     'seguranca',
@@ -47,7 +47,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     final provider = context.read<ProjectsProvider>();
-    
+
     final project = await provider.createProject(
       title: _titleController.text,
       shortDescription: _shortDescController.text,
@@ -110,7 +110,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              value: _selectedCategory,
+              initialValue: _selectedCategory,
               decoration: const InputDecoration(
                 labelText: 'Categoria',
               ),
@@ -157,14 +157,20 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
 
   String _getCategoryName(String category) {
     switch (category) {
-      case 'seguranca': return 'Segurança';
-      case 'infraestrutura': return 'Infraestrutura';
-      case 'cultura': return 'Cultura';
-      case 'saude': return 'Saúde';
-      case 'educacao': return 'Educação';
-      case 'lazer': return 'Lazer';
-      default: return 'Outro';
+      case 'seguranca':
+        return 'Segurança';
+      case 'infraestrutura':
+        return 'Infraestrutura';
+      case 'cultura':
+        return 'Cultura';
+      case 'saude':
+        return 'Saúde';
+      case 'educacao':
+        return 'Educação';
+      case 'lazer':
+        return 'Lazer';
+      default:
+        return 'Outro';
     }
   }
 }
-

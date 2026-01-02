@@ -34,9 +34,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   Future<void> _loadProject() async {
     final provider = context.read<ProjectsProvider>();
     final authProvider = context.read<AuthProvider>();
-    
+
     await provider.loadProjectDetails(widget.projectId);
-    
+
     if (authProvider.user?.email != null) {
       await provider.loadUserVote(
         projectId: widget.projectId,
@@ -156,7 +156,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                       Text(
                         'Por ${project.ownerName}',
                         style: TextStyle(
-                          color: isDark ? AppColors.slate400 : AppColors.slate600,
+                          color:
+                              isDark ? AppColors.slate400 : AppColors.slate600,
                         ),
                       ),
                     ],
@@ -177,7 +178,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  project.description ?? project.shortDescription ?? 'Sem descrição',
+                  project.description ??
+                      project.shortDescription ??
+                      'Sem descrição',
                   style: TextStyle(
                     fontSize: 15,
                     color: isDark ? AppColors.slate300 : AppColors.slate700,
@@ -200,10 +203,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                         padding: const EdgeInsets.all(12),
                         margin: const EdgeInsets.only(bottom: 8),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.slate800 : AppColors.slate100,
+                          color:
+                              isDark ? AppColors.slate800 : AppColors.slate100,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: isDark ? AppColors.slate700 : AppColors.slate200,
+                            color: isDark
+                                ? AppColors.slate700
+                                : AppColors.slate200,
                           ),
                         ),
                         child: Row(
@@ -217,7 +223,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                     expense.type,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      color: isDark ? AppColors.slate200 : AppColors.slate800,
+                                      color: isDark
+                                          ? AppColors.slate200
+                                          : AppColors.slate800,
                                     ),
                                   ),
                                   if (expense.description != null)
@@ -225,7 +233,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                       expense.description!,
                                       style: TextStyle(
                                         fontSize: 13,
-                                        color: isDark ? AppColors.slate400 : AppColors.slate600,
+                                        color: isDark
+                                            ? AppColors.slate400
+                                            : AppColors.slate600,
                                       ),
                                     ),
                                 ],
@@ -233,7 +243,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                             ),
                             Text(
                               Formatters.currency(expense.total),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primary,
                               ),
@@ -278,8 +288,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
   Widget _buildPlaceholder([bool isDark = false]) {
     return Container(
-      color: isDark ? AppColors.slate800 : AppColors.primaryLight.withOpacity(0.3),
-      child: Center(
+      color:
+          isDark ? AppColors.slate800 : AppColors.primaryLight.withOpacity(0.3),
+      child: const Center(
         child: Icon(
           Icons.rocket_launch,
           size: 60,
@@ -293,7 +304,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark 
+        color: isDark
             ? AppColors.statusVoting.withOpacity(0.15)
             : AppColors.statusVoting.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
@@ -315,7 +326,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
               ),
               Text(
                 '${project.votesCount}/${project.minVotes}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: AppColors.statusVoting,
                 ),
@@ -328,7 +339,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
             child: LinearProgressIndicator(
               value: project.votesProgress,
               backgroundColor: AppColors.statusVoting.withOpacity(0.2),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.statusVoting),
+              valueColor:
+                  const AlwaysStoppedAnimation<Color>(AppColors.statusVoting),
               minHeight: 10,
             ),
           ),
@@ -376,7 +388,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
             child: LinearProgressIndicator(
               value: project.fundingProgress,
               backgroundColor: AppColors.success.withOpacity(0.2),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.success),
+              valueColor:
+                  const AlwaysStoppedAnimation<Color>(AppColors.success),
               minHeight: 10,
             ),
           ),
@@ -406,7 +419,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
   Widget _buildBottomBar(project, ProjectsProvider projectsProvider) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -491,7 +504,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
   void _handleVote(String type, ProjectsProvider projectsProvider) {
     final authProvider = context.read<AuthProvider>();
-    
+
     if (authProvider.user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -502,16 +515,20 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       return;
     }
 
-    projectsProvider.vote(
+    projectsProvider
+        .vote(
       projectId: widget.projectId,
       userId: authProvider.user!.id,
       userEmail: authProvider.user?.email ?? '',
       type: type,
-    ).then((success) {
+    )
+        .then((success) {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(type == 'up' ? 'Você gostou deste projeto!' : 'Você não gostou deste projeto'),
+            content: Text(type == 'up'
+                ? 'Você gostou deste projeto!'
+                : 'Você não gostou deste projeto'),
             backgroundColor: AppColors.success,
             duration: const Duration(seconds: 2),
           ),
@@ -529,4 +546,3 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     });
   }
 }
-

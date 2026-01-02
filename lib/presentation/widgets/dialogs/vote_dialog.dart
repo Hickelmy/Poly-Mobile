@@ -35,14 +35,15 @@ class VoteDialog extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'Votos atuais: ${project?.votesCount ?? 0}/${project?.minVotes ?? 0}',
-            style: TextStyle(color: AppColors.textSecondary),
+            style: const TextStyle(color: AppColors.textSecondary),
           ),
           const SizedBox(height: 24),
           Row(
             children: [
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: () => _vote(context, authProvider, projectsProvider, 'up'),
+                  onPressed: () =>
+                      _vote(context, authProvider, projectsProvider, 'up'),
                   icon: const Icon(Icons.thumb_up),
                   label: const Text('Apoiar'),
                   style: ElevatedButton.styleFrom(
@@ -54,7 +55,8 @@ class VoteDialog extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: () => _vote(context, authProvider, projectsProvider, 'down'),
+                  onPressed: () =>
+                      _vote(context, authProvider, projectsProvider, 'down'),
                   icon: const Icon(Icons.thumb_down),
                   label: const Text('Rejeitar'),
                   style: ElevatedButton.styleFrom(
@@ -99,11 +101,12 @@ class VoteDialog extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          success ? 'Voto registrado!' : projectsProvider.error ?? 'Erro ao votar',
+          success
+              ? 'Voto registrado!'
+              : projectsProvider.error ?? 'Erro ao votar',
         ),
         backgroundColor: success ? AppColors.success : AppColors.error,
       ),
     );
   }
 }
-

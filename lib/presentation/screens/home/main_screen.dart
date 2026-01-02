@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../routes/app_routes.dart';
 import '../../providers/auth_provider.dart';
 import 'dashboard_screen.dart';
 import '../projects/projects_list_screen.dart';
@@ -32,7 +34,17 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+    _checkLocationPermission();
     _loadInitialData();
+  }
+
+  Future<void> _checkLocationPermission() async {
+    final status = await Permission.location.status;
+    if (!status.isGranted) {
+      if (mounted) {
+        AppRoutes.navigateAndClear(AppRoutes.locationPermission);
+      }
+    }
   }
 
   Future<void> _loadInitialData() async {

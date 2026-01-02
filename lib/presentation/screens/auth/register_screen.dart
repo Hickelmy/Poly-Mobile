@@ -86,7 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: Container(
         decoration: BoxDecoration(
           gradient: Theme.of(context).brightness == Brightness.dark
-              ? LinearGradient(
+              ? const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
@@ -142,7 +142,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     // Título
                     Builder(
                       builder: (context) {
-                        final isDark = Theme.of(context).brightness == Brightness.dark;
+                        final isDark =
+                            Theme.of(context).brightness == Brightness.dark;
                         return Column(
                           children: [
                             Text(
@@ -150,7 +151,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
-                                color: isDark ? AppColors.slate50 : AppColors.slate900,
+                                color: isDark
+                                    ? AppColors.slate50
+                                    : AppColors.slate900,
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -158,7 +161,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               'Junte-se à comunidade POLYS',
                               style: TextStyle(
                                 fontSize: 16,
-                                color: isDark ? AppColors.slate400 : AppColors.slate600,
+                                color: isDark
+                                    ? AppColors.slate400
+                                    : AppColors.slate600,
                               ),
                             ),
                           ],
@@ -196,16 +201,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       prefixIcon: Icons.lock_outline,
                       suffixIcon: Builder(
                         builder: (context) {
-                          final isDark = Theme.of(context).brightness == Brightness.dark;
+                          final isDark =
+                              Theme.of(context).brightness == Brightness.dark;
                           return IconButton(
                             icon: Icon(
                               _obscurePassword
                                   ? Icons.visibility_outlined
                                   : Icons.visibility_off_outlined,
-                              color: isDark ? AppColors.slate400 : AppColors.slate600,
+                              color: isDark
+                                  ? AppColors.slate400
+                                  : AppColors.slate600,
                             ),
                             onPressed: () {
-                              setState(() => _obscurePassword = !_obscurePassword);
+                              setState(
+                                  () => _obscurePassword = !_obscurePassword);
                             },
                           );
                         },
@@ -222,17 +231,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       prefixIcon: Icons.lock_outline,
                       suffixIcon: Builder(
                         builder: (context) {
-                          final isDark = Theme.of(context).brightness == Brightness.dark;
+                          final isDark =
+                              Theme.of(context).brightness == Brightness.dark;
                           return IconButton(
                             icon: Icon(
                               _obscureConfirmPassword
                                   ? Icons.visibility_outlined
                                   : Icons.visibility_off_outlined,
-                              color: isDark ? AppColors.slate400 : AppColors.slate600,
+                              color: isDark
+                                  ? AppColors.slate400
+                                  : AppColors.slate600,
                             ),
                             onPressed: () {
-                              setState(() =>
-                                  _obscureConfirmPassword = !_obscureConfirmPassword);
+                              setState(() => _obscureConfirmPassword =
+                                  !_obscureConfirmPassword);
                             },
                           );
                         },
@@ -264,7 +276,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               TextSpan(
                                 text: 'Eu aceito os ',
                                 style: TextStyle(
-                                  color: Theme.of(context).brightness == Brightness.dark
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
                                       ? AppColors.slate400
                                       : AppColors.slate600,
                                   fontSize: 14,
@@ -275,12 +288,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       onTap: () {
                                         showDialog(
                                           context: context,
-                                          builder: (_) => const TermsAndPrivacyDialog(
+                                          builder: (_) =>
+                                              const TermsAndPrivacyDialog(
                                             initialDocument: 'terms',
                                           ),
                                         );
                                       },
-                                      child: Text(
+                                      child: const Text(
                                         'Termos de Uso',
                                         style: TextStyle(
                                           color: AppColors.primary,
@@ -296,12 +310,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       onTap: () {
                                         showDialog(
                                           context: context,
-                                          builder: (_) => const TermsAndPrivacyDialog(
+                                          builder: (_) =>
+                                              const TermsAndPrivacyDialog(
                                             initialDocument: 'privacy',
                                           ),
                                         );
                                       },
-                                      child: Text(
+                                      child: const Text(
                                         'Política de Privacidade',
                                         style: TextStyle(
                                           color: AppColors.primary,
@@ -339,11 +354,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       children: [
                         Builder(
                           builder: (context) {
-                            final isDark = Theme.of(context).brightness == Brightness.dark;
+                            final isDark =
+                                Theme.of(context).brightness == Brightness.dark;
                             return Text(
                               AppStrings.hasAccount,
                               style: TextStyle(
-                                color: isDark ? AppColors.slate400 : AppColors.slate600,
+                                color: isDark
+                                    ? AppColors.slate400
+                                    : AppColors.slate600,
                               ),
                             );
                           },
@@ -369,4 +387,3 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
-

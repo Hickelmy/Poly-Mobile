@@ -31,7 +31,7 @@ class ThemeToggleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     // Ícone: se está dark, mostra sol para ir pro light; se está light, mostra lua para ir pro dark
     final icon = isDark ? Icons.light_mode : Icons.dark_mode;
     final tooltip = isDark ? 'Modo Claro' : 'Modo Escuro';
@@ -58,7 +58,7 @@ class ThemeToggleButton extends StatelessWidget {
         trailing: Switch(
           value: isDark,
           onChanged: (_) => _toggleTheme(context),
-          activeColor: AppColors.primary,
+          activeThumbColor: AppColors.primary,
         ),
         onTap: () => _toggleTheme(context),
       );
@@ -94,7 +94,7 @@ class ThemeSwitch extends StatelessWidget {
         final newMode = isDark ? ThemeMode.light : ThemeMode.dark;
         provider.updateThemeMode(newMode);
       },
-      activeColor: AppColors.primary,
+      activeThumbColor: AppColors.primary,
     );
   }
 }

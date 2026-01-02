@@ -64,7 +64,7 @@ class NewsCard extends StatelessWidget {
                         : null,
                   ),
                   const SizedBox(width: 12),
-                  
+
                   // Nome e data
                   Expanded(
                     child: Column(
@@ -76,12 +76,14 @@ class NewsCard extends StatelessWidget {
                               news.author?.name ?? 'Administrador',
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                color: isDark ? AppColors.slate100 : AppColors.slate900,
+                                color: isDark
+                                    ? AppColors.slate100
+                                    : AppColors.slate900,
                               ),
                             ),
                             if (news.isPinned) ...[
                               const SizedBox(width: 6),
-                              Icon(
+                              const Icon(
                                 Icons.push_pin,
                                 size: 14,
                                 color: AppColors.warning,
@@ -96,7 +98,9 @@ class NewsCard extends StatelessWidget {
                               Formatters.relativeTime(news.createdAt),
                               style: TextStyle(
                                 fontSize: 12,
-                                color: isDark ? AppColors.slate400 : AppColors.slate500,
+                                color: isDark
+                                    ? AppColors.slate400
+                                    : AppColors.slate500,
                               ),
                             ),
                             if (news.zoneName != null) ...[
@@ -104,7 +108,9 @@ class NewsCard extends StatelessWidget {
                                 ' • ',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: isDark ? AppColors.slate500 : AppColors.slate400,
+                                  color: isDark
+                                      ? AppColors.slate500
+                                      : AppColors.slate400,
                                 ),
                               ),
                               Container(
@@ -118,7 +124,7 @@ class NewsCard extends StatelessWidget {
                                 ),
                                 child: Text(
                                   news.zoneName!,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 10,
                                     color: AppColors.primary,
                                     fontWeight: FontWeight.w500,
@@ -232,7 +238,9 @@ class NewsCard extends StatelessWidget {
                       style: TextStyle(
                         color: isLiked
                             ? AppColors.error
-                            : (isDark ? AppColors.slate400 : AppColors.slate500),
+                            : (isDark
+                                ? AppColors.slate400
+                                : AppColors.slate500),
                       ),
                     ),
                   ),
@@ -277,4 +285,3 @@ class NewsCard extends StatelessWidget {
     );
   }
 }
-

@@ -244,16 +244,19 @@ class _AddProductSheetState extends State<_AddProductSheet> {
                   Expanded(
                     child: TextFormField(
                       controller: _priceController,
-                      decoration: const InputDecoration(labelText: 'Preço (R\$)'),
+                      decoration:
+                          const InputDecoration(labelText: 'Preço (R\$)'),
                       keyboardType: TextInputType.number,
-                      validator: (v) => v?.isEmpty == true ? 'Obrigatório' : null,
+                      validator: (v) =>
+                          v?.isEmpty == true ? 'Obrigatório' : null,
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: TextFormField(
                       controller: _quantityController,
-                      decoration: const InputDecoration(labelText: 'Quantidade'),
+                      decoration:
+                          const InputDecoration(labelText: 'Quantidade'),
                       keyboardType: TextInputType.number,
                     ),
                   ),
@@ -357,20 +360,25 @@ class _AddServiceSheetState extends State<_AddServiceSheet> {
                   Expanded(
                     child: TextFormField(
                       controller: _priceController,
-                      decoration: const InputDecoration(labelText: 'Preço (R\$)'),
+                      decoration:
+                          const InputDecoration(labelText: 'Preço (R\$)'),
                       keyboardType: TextInputType.number,
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: DropdownButtonFormField<String>(
-                      value: _priceType,
+                      initialValue: _priceType,
                       decoration: const InputDecoration(labelText: 'Tipo'),
                       items: const [
-                        DropdownMenuItem(value: 'hora', child: Text('Por hora')),
-                        DropdownMenuItem(value: 'diaria', child: Text('Por dia')),
-                        DropdownMenuItem(value: 'servico', child: Text('Por serviço')),
-                        DropdownMenuItem(value: 'orcamento', child: Text('Orçamento')),
+                        DropdownMenuItem(
+                            value: 'hora', child: Text('Por hora')),
+                        DropdownMenuItem(
+                            value: 'diaria', child: Text('Por dia')),
+                        DropdownMenuItem(
+                            value: 'servico', child: Text('Por serviço')),
+                        DropdownMenuItem(
+                            value: 'orcamento', child: Text('Orçamento')),
                       ],
                       onChanged: (v) => setState(() => _priceType = v!),
                     ),
@@ -419,4 +427,3 @@ class _AddServiceSheetState extends State<_AddServiceSheet> {
     }
   }
 }
-

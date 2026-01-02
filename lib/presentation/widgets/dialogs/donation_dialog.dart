@@ -72,7 +72,7 @@ class _DonationDialogState extends State<DonationDialog> {
             const SizedBox(height: 4),
             Text(
               project?.title ?? '',
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.textSecondary,
               ),
             ),
@@ -98,17 +98,21 @@ class _DonationDialogState extends State<DonationDialog> {
                         vertical: 12,
                       ),
                       decoration: BoxDecoration(
-                        color: isSelected ? AppColors.primary : AppColors.surfaceVariant,
+                        color: isSelected
+                            ? AppColors.primary
+                            : AppColors.surfaceVariant,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: isSelected ? AppColors.primary : AppColors.border,
+                          color:
+                              isSelected ? AppColors.primary : AppColors.border,
                         ),
                       ),
                       child: Text(
                         Formatters.currency(amount),
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          color: isSelected ? Colors.white : AppColors.textPrimary,
+                          color:
+                              isSelected ? Colors.white : AppColors.textPrimary,
                         ),
                       ),
                     ),
@@ -165,7 +169,7 @@ class _DonationDialogState extends State<DonationDialog> {
                     const SizedBox(height: 8),
                     Text(
                       _pixCode ?? 'Código PIX aqui...',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 12,
                         color: AppColors.textSecondary,
                       ),
@@ -233,4 +237,3 @@ class _DonationDialogState extends State<DonationDialog> {
     }
   }
 }
-

@@ -16,6 +16,7 @@ import '../presentation/screens/admin/user_management_screen.dart';
 import '../presentation/screens/admin/zone_management_screen.dart';
 import '../presentation/screens/admin/app_settings_screen.dart';
 import '../presentation/screens/news/news_screen.dart';
+import '../presentation/screens/location/location_permission_screen.dart';
 
 /// Gerenciador de rotas do app
 class AppRoutes {
@@ -25,6 +26,7 @@ class AppRoutes {
 
   // Rotas
   static const String splash = '/';
+  static const String locationPermission = '/location-permission';
   static const String login = '/login';
   static const String register = '/register';
   static const String main = '/main';
@@ -49,6 +51,9 @@ class AppRoutes {
     switch (settings.name) {
       case splash:
         return _fadeRoute(const SplashScreen(), settings);
+
+      case locationPermission:
+        return _fadeRoute(const LocationPermissionScreen(), settings);
 
       case login:
         return _slideRoute(const LoginScreen(), settings);

@@ -117,6 +117,7 @@ class VotingProgressBar extends StatelessWidget {
     final bias = (upVotes - downVotes) / totalVotes;
     return (0.5 + bias * 0.5).clamp(0.0, 1.0);
   }
+
   double get downPercent => 1.0 - upPercent;
 
   @override
@@ -133,7 +134,7 @@ class VotingProgressBar extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   '$upVotes',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 11,
                     color: AppColors.emerald500,
                     fontWeight: FontWeight.w600,
@@ -145,7 +146,7 @@ class VotingProgressBar extends StatelessWidget {
               children: [
                 Text(
                   '$downVotes',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 11,
                     color: AppColors.error,
                     fontWeight: FontWeight.w600,
@@ -174,8 +175,12 @@ class VotingProgressBar extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(height! / 2),
                       bottomLeft: Radius.circular(height! / 2),
-                      topRight: upPercent < 1.0 ? Radius.zero : Radius.circular(height! / 2),
-                      bottomRight: upPercent < 1.0 ? Radius.zero : Radius.circular(height! / 2),
+                      topRight: upPercent < 1.0
+                          ? Radius.zero
+                          : Radius.circular(height! / 2),
+                      bottomRight: upPercent < 1.0
+                          ? Radius.zero
+                          : Radius.circular(height! / 2),
                     ),
                   ),
                 ),
@@ -188,8 +193,12 @@ class VotingProgressBar extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                       topRight: Radius.circular(height! / 2),
                       bottomRight: Radius.circular(height! / 2),
-                      topLeft: downPercent < 1.0 ? Radius.zero : Radius.circular(height! / 2),
-                      bottomLeft: downPercent < 1.0 ? Radius.zero : Radius.circular(height! / 2),
+                      topLeft: downPercent < 1.0
+                          ? Radius.zero
+                          : Radius.circular(height! / 2),
+                      bottomLeft: downPercent < 1.0
+                          ? Radius.zero
+                          : Radius.circular(height! / 2),
                     ),
                   ),
                 ),
@@ -201,4 +210,3 @@ class VotingProgressBar extends StatelessWidget {
     );
   }
 }
-

@@ -35,7 +35,7 @@ class _NewsScreenState extends State<NewsScreen> {
     super.didChangeDependencies();
     final selectedZoneProvider = context.read<SelectedZoneProvider>();
     final currentZoneId = selectedZoneProvider.selectedZoneId;
-    
+
     // Só recarrega se a zona realmente mudou
     if (_lastZoneId != currentZoneId) {
       _lastZoneId = currentZoneId;
@@ -111,7 +111,8 @@ class _NewsScreenState extends State<NewsScreen> {
       return const EmptyStateWidget(
         icon: Icons.newspaper_outlined,
         title: 'Nenhuma notícia',
-        message: 'Quando houver notícias e informações da sua área, elas aparecerão aqui.',
+        message:
+            'Quando houver notícias e informações da sua área, elas aparecerão aqui.',
       );
     }
 
@@ -211,11 +212,15 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                           news.imageUrl!,
                           fit: BoxFit.cover,
                           errorBuilder: (_, __, ___) => Container(
-                            color: isDark ? AppColors.slate800 : AppColors.slate200,
+                            color: isDark
+                                ? AppColors.slate800
+                                : AppColors.slate200,
                             child: Icon(
                               Icons.image_not_supported,
                               size: 64,
-                              color: isDark ? AppColors.slate600 : AppColors.slate400,
+                              color: isDark
+                                  ? AppColors.slate600
+                                  : AppColors.slate400,
                             ),
                           ),
                         ),
@@ -323,7 +328,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                           news.author!.name,
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            color: isDark ? AppColors.slate300 : AppColors.slate700,
+                            color: isDark
+                                ? AppColors.slate300
+                                : AppColors.slate700,
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -331,7 +338,8 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       Text(
                         '• ${Formatters.relativeTime(news.createdAt)}',
                         style: TextStyle(
-                          color: isDark ? AppColors.slate400 : AppColors.slate500,
+                          color:
+                              isDark ? AppColors.slate400 : AppColors.slate500,
                           fontSize: 13,
                         ),
                       ),
@@ -348,7 +356,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                           ),
                           child: Text(
                             news.zoneName!,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 11,
                               color: AppColors.primary,
                               fontWeight: FontWeight.w500,
@@ -548,8 +556,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
             ),
           )
         else
-          ...newsProvider.comments.map((comment) => _buildCommentItem(comment, isDark)),
-        
+          ...newsProvider.comments
+              .map((comment) => _buildCommentItem(comment, isDark)),
+
         // Espaço extra para o campo de input
         const SizedBox(height: 80),
       ],
@@ -725,7 +734,8 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
           TextButton(
             onPressed: () async {
               Navigator.pop(context);
-              final success = await context.read<NewsProvider>().deleteNews(newsId);
+              final success =
+                  await context.read<NewsProvider>().deleteNews(newsId);
               if (success && mounted) {
                 Navigator.pop(context);
               }
@@ -756,7 +766,8 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                         title: Text(reason),
                         value: reason,
                         groupValue: selectedReason,
-                        onChanged: (value) => setState(() => selectedReason = value),
+                        onChanged: (value) =>
+                            setState(() => selectedReason = value),
                       )),
               const SizedBox(height: 8),
               TextField(
@@ -778,13 +789,14 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               onPressed: selectedReason != null
                   ? () async {
                       Navigator.pop(context);
-                      final success = await context.read<NewsProvider>().reportNews(
-                        newsId: newsId,
-                        reason: selectedReason!,
-                        description: descController.text.isNotEmpty
-                            ? descController.text
-                            : null,
-                      );
+                      final success =
+                          await context.read<NewsProvider>().reportNews(
+                                newsId: newsId,
+                                reason: selectedReason!,
+                                description: descController.text.isNotEmpty
+                                    ? descController.text
+                                    : null,
+                              );
                       if (success && mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -934,7 +946,7 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
         actions: [
           TextButton(
             onPressed: _isLoading ? null : _submit,
-            child: Text(
+            child: const Text(
               'Publicar',
               style: TextStyle(
                 color: AppColors.primary,
@@ -1028,7 +1040,8 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
                 alignLabelWithHint: true,
               ),
               maxLines: 15,
-              validator: (v) => v?.isEmpty == true ? 'Informe o conteúdo' : null,
+              validator: (v) =>
+                  v?.isEmpty == true ? 'Informe o conteúdo' : null,
             ),
             const SizedBox(height: 24),
 
@@ -1060,7 +1073,7 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
                     ),
                     value: _isPublished,
                     onChanged: (v) => setState(() => _isPublished = v),
-                    activeColor: AppColors.primary,
+                    activeThumbColor: AppColors.primary,
                   ),
                   const Divider(),
                   SwitchListTile(
@@ -1079,7 +1092,7 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
                     ),
                     value: _isPinned,
                     onChanged: (v) => setState(() => _isPinned = v),
-                    activeColor: AppColors.primary,
+                    activeThumbColor: AppColors.primary,
                   ),
                 ],
               ),
@@ -1122,4 +1135,3 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
     }
   }
 }
-

@@ -50,7 +50,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     // Cores adaptáveis ao tema
     final textColor = isDark ? AppColors.slate50 : AppColors.slate900;
     final hintColor = isDark ? AppColors.slate400 : AppColors.slate500;
@@ -58,8 +58,8 @@ class CustomTextField extends StatelessWidget {
     final iconColor = isDark ? AppColors.slate400 : AppColors.slate600;
     final fillColor = isDark ? AppColors.slate800 : AppColors.slate100;
     final borderColor = isDark ? AppColors.slate700 : AppColors.slate300;
-    final focusedBorderColor = AppColors.teal500;
-    
+    const focusedBorderColor = AppColors.teal500;
+
     return TextFormField(
       controller: controller,
       initialValue: initialValue,
@@ -117,14 +117,14 @@ class CustomTextField extends StatelessWidget {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: AppColors.error,
             width: 1.5,
           ),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: AppColors.error,
             width: 2,
           ),
@@ -173,15 +173,15 @@ class CustomTextArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     // Cores adaptáveis ao tema
     final textColor = isDark ? AppColors.slate50 : AppColors.slate900;
     final hintColor = isDark ? AppColors.slate400 : AppColors.slate500;
     final labelColor = isDark ? AppColors.slate300 : AppColors.slate600;
     final fillColor = isDark ? AppColors.slate800 : AppColors.slate100;
     final borderColor = isDark ? AppColors.slate700 : AppColors.slate300;
-    final focusedBorderColor = AppColors.teal500;
-    
+    const focusedBorderColor = AppColors.teal500;
+
     return TextFormField(
       controller: controller,
       validator: validator,
@@ -228,14 +228,14 @@ class CustomTextArea extends StatelessWidget {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: AppColors.error,
             width: 1.5,
           ),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: AppColors.error,
             width: 2,
           ),
@@ -248,4 +248,3 @@ class CustomTextArea extends StatelessWidget {
     );
   }
 }
-

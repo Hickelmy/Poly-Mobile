@@ -80,7 +80,8 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                 'Envia relatório diário para administradores',
               ),
               value: settings?.dailySummaryEmail ?? false,
-              onChanged: (v) => provider.updateSettings({'dailySummaryEmail': v}),
+              onChanged: (v) =>
+                  provider.updateSettings({'dailySummaryEmail': v}),
               secondary: const Icon(Icons.email),
             ),
           ),
@@ -93,11 +94,11 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  const Row(
                     children: [
-                      const Icon(Icons.percent, color: AppColors.primary),
-                      const SizedBox(width: 12),
-                      const Text(
+                      Icon(Icons.percent, color: AppColors.primary),
+                      SizedBox(width: 12),
+                      Text(
                         'Taxa da Plataforma',
                         style: TextStyle(
                           fontSize: 16,
@@ -107,7 +108,7 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text(
+                  const Text(
                     'Porcentagem cobrada em cada transação',
                     style: TextStyle(
                       color: AppColors.textSecondary,
@@ -179,4 +180,3 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
     );
   }
 }
-

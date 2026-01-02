@@ -135,7 +135,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     const SizedBox(width: 8),
                     Text(
                       '${product.quantityAvailable} unidades disponíveis',
-                      style: TextStyle(color: AppColors.textSecondary),
+                      style: const TextStyle(color: AppColors.textSecondary),
                     ),
                   ],
                 ),
@@ -151,7 +151,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 const SizedBox(height: 8),
                 Text(
                   product.description ?? 'Sem descrição',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 15,
                     color: AppColors.textSecondary,
                     height: 1.5,
@@ -221,7 +221,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     if (product.sellerEmail != null) {
                       Helpers.openWhatsApp(
                         product.sellerEmail!,
-                        message: 'Olá! Vi seu produto "${product.title}" no POLYS.',
+                        message:
+                            'Olá! Vi seu produto "${product.title}" no POLYS.',
                       );
                     }
                   },
@@ -248,4 +249,3 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 }
-

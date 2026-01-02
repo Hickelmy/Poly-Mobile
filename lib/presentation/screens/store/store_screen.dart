@@ -34,7 +34,7 @@ class _StoreScreenState extends State<StoreScreen> {
     super.didChangeDependencies();
     final selectedZoneProvider = context.read<SelectedZoneProvider>();
     final currentZoneId = selectedZoneProvider.selectedZoneId;
-    
+
     // Só recarrega se a zona realmente mudou
     if (_lastZoneId != currentZoneId) {
       _lastZoneId = currentZoneId;
@@ -79,9 +79,9 @@ class _StoreScreenState extends State<StoreScreen> {
       floatingActionButton: FloatingActionButton(
         heroTag: 'store_fab',
         onPressed: () => AppRoutes.navigateTo(AppRoutes.sellerDashboard),
-        child: const Icon(Icons.add),
         backgroundColor: AppColors.productColor,
         tooltip: 'Vender',
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -112,7 +112,7 @@ class _StoreScreenState extends State<StoreScreen> {
         crossAxisCount: 2,
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
-        childAspectRatio: 0.68,
+        childAspectRatio: 0.82,
       ),
       itemCount: provider.products.length,
       itemBuilder: (context, index) {
@@ -206,4 +206,3 @@ class _FilterChip extends StatelessWidget {
     );
   }
 }
-
