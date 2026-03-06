@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/utils/formatters.dart';
+import '../../../core/utils/image_utils.dart';
 import '../../../data/models/news_model.dart';
 import '../../providers/news_provider.dart';
 
@@ -44,24 +45,19 @@ class NewsCard extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  // Avatar do autor
+                  // Avatar do autor - sempre mostra inicial do nome
                   CircleAvatar(
                     radius: 20,
                     backgroundColor: AppColors.primary,
-                    backgroundImage: news.author?.avatarUrl != null
-                        ? NetworkImage(news.author!.avatarUrl!)
-                        : null,
-                    child: news.author?.avatarUrl == null
-                        ? Text(
-                            news.author?.name.isNotEmpty == true
-                                ? news.author!.name[0].toUpperCase()
-                                : 'A',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
-                        : null,
+                    child: Text(
+                      news.author?.name.isNotEmpty == true
+                          ? news.author!.name[0].toUpperCase()
+                          : 'A',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 12),
 
@@ -152,8 +148,11 @@ class NewsCard extends StatelessWidget {
               ),
             ),
 
-            // Imagem (se houver)
-            if (news.imageUrl != null)
+            // Imagem (se houver) - suporta URLs e base64
+            if (news.imageUrl != null &&
+                news.imageUrl!.isNotEmpty &&
+                (news.imageUrl!.startsWith('http://') ||
+                    news.imageUrl!.startsWith('https://')))
               ClipRRect(
                 child: Image.network(
                   news.imageUrl!,
@@ -161,6 +160,24 @@ class NewsCard extends StatelessWidget {
                   height: 200,
                   fit: BoxFit.cover,
                   errorBuilder: (_, __, ___) => Container(
+                    height: 200,
+                    color: isDark ? AppColors.slate700 : AppColors.slate200,
+                    child: Icon(
+                      Icons.image_not_supported,
+                      size: 48,
+                      color: isDark ? AppColors.slate500 : AppColors.slate400,
+                    ),
+                  ),
+                ),
+              )
+            else if (news.imageUrl != null &&
+                news.imageUrl!.isNotEmpty &&
+                ImageUtils.isBase64Image(news.imageUrl))
+              ClipRRect(
+                child: ImageUtils.buildImage(
+                  imageUrl: news.imageUrl,
+                  fit: BoxFit.cover,
+                  errorWidget: Container(
                     height: 200,
                     color: isDark ? AppColors.slate700 : AppColors.slate200,
                     child: Icon(

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import '../../core/network/api_client.dart';
 import '../../core/errors/exceptions.dart';
@@ -193,6 +194,30 @@ class UserProvider extends ChangeNotifier {
   void clearSelectedUser() {
     _selectedUser = null;
     notifyListeners();
+  }
+
+  /// Faz upload de uma imagem e retorna a URL
+  Future<String?> uploadImage(File imageFile) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final imageUrl = await _userRepository.uploadImage(imageFile);
+      _isLoading = false;
+      notifyListeners();
+      return imageUrl;
+    } on AppException catch (e) {
+      _error = e.message;
+      _isLoading = false;
+      notifyListeners();
+      return null;
+    } catch (e) {
+      _error = 'Erro ao fazer upload da imagem';
+      _isLoading = false;
+      notifyListeners();
+      return null;
+    }
   }
 }
 

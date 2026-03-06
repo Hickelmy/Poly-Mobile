@@ -18,6 +18,8 @@ class ServiceRepository {
     int? limit,
     int? offset,
     String? providerId,
+    double? userLat,
+    double? userLng,
   }) async {
     try {
       final queryParams = <String, dynamic>{};
@@ -28,6 +30,8 @@ class ServiceRepository {
       if (limit != null) queryParams['limit'] = limit;
       if (offset != null) queryParams['offset'] = offset;
       if (providerId != null) queryParams['provider_id'] = providerId;
+      if (userLat != null) queryParams['user_lat'] = userLat;
+      if (userLng != null) queryParams['user_lng'] = userLng;
 
       final response = await _apiClient.get(
         ApiEndpoints.services,

@@ -5,6 +5,7 @@ import '../../../core/utils/formatters.dart';
 import '../../../core/utils/helpers.dart';
 import '../../../core/utils/image_utils.dart';
 import '../../providers/services_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../widgets/common/loading_widget.dart';
 import '../../widgets/common/error_widget.dart';
 import '../../widgets/common/custom_button.dart';
@@ -26,18 +27,28 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _loadService();
+    // Aguarda o frame para evitar setState durante build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadService();
+    });
   }
 
   Future<void> _loadService() async {
+    if (!mounted) return;
     await context.read<ServicesProvider>().loadServiceDetails(widget.serviceId);
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<ServicesProvider>();
+    final authProvider = context.watch<AuthProvider>();
     final service = provider.selectedService;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    // Verifica se o usuário atual é o dono do serviço
+    final isOwner = service?.providerId != null && 
+                    authProvider.user?.id != null &&
+                    service!.providerId == authProvider.user!.id;
 
     if (provider.isLoading && service == null) {
       return Scaffold(
@@ -69,15 +80,19 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
           SliverAppBar(
             expandedHeight: 250,
             pinned: true,
+            backgroundColor: isDark ? AppColors.slate900 : AppColors.surface,
+            iconTheme: IconThemeData(
+              color: isDark ? AppColors.slate100 : AppColors.textPrimary,
+            ),
             flexibleSpace: FlexibleSpaceBar(
               background: service.primaryImage != null
                   ? ImageUtils.buildImage(
                       imageUrl: service.primaryImage!,
                       fit: BoxFit.cover,
-                      placeholder: _buildPlaceholder(),
-                      errorWidget: _buildPlaceholder(),
+                      placeholder: _buildPlaceholder(context),
+                      errorWidget: _buildPlaceholder(context),
                     )
-                  : _buildPlaceholder(),
+                  : _buildPlaceholder(context),
             ),
           ),
           SliverPadding(
@@ -112,13 +127,17 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                       const SizedBox(width: 4),
                       Text(
                         service.formattedRating,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? AppColors.slate100 : AppColors.textPrimary,
+                        ),
                       ),
                       if (service.reviewsCount != null)
                         Text(
                           ' (${service.reviewsCount})',
-                          style:
-                              const TextStyle(color: AppColors.textSecondary),
+                          style: TextStyle(
+                            color: isDark ? AppColors.slate400 : AppColors.textSecondary,
+                          ),
                         ),
                     ],
                   ],
@@ -127,9 +146,10 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                 // Título
                 Text(
                   service.title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
+                    color: isDark ? AppColors.slate100 : AppColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -150,9 +170,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                       const SizedBox(width: 8),
                       Text(
                         service.priceTypeName,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
-                          color: AppColors.textSecondary,
+                          color: isDark ? AppColors.slate400 : AppColors.textSecondary,
                         ),
                       ),
                     ],
@@ -168,38 +188,43 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                   ),
                 const SizedBox(height: 24),
                 // Descrição
-                const Text(
+                Text(
                   'Descrição',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
+                    color: isDark ? AppColors.slate100 : AppColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   service.description ?? 'Sem descrição',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
-                    color: AppColors.textSecondary,
+                    color: isDark ? AppColors.slate300 : AppColors.textSecondary,
                     height: 1.5,
                   ),
                 ),
                 const SizedBox(height: 24),
                 // Prestador
                 if (service.providerName != null) ...[
-                  const Text(
+                  Text(
                     'Prestador',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      color: isDark ? AppColors.slate100 : AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceVariant,
+                      color: isDark ? AppColors.slate800 : AppColors.surfaceVariant,
                       borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isDark ? AppColors.slate700 : AppColors.border,
+                      ),
                     ),
                     child: Row(
                       children: [
@@ -207,7 +232,10 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           backgroundColor: AppColors.serviceColor,
                           child: Text(
                             Helpers.getInitials(service.providerName!),
-                            style: const TextStyle(color: Colors.white),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -217,14 +245,16 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             children: [
                               Text(
                                 service.providerName!,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w600),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: isDark ? AppColors.slate100 : AppColors.textPrimary,
+                                ),
                               ),
                               if (service.zoneName != null)
                                 Text(
                                   service.zoneName!,
-                                  style: const TextStyle(
-                                    color: AppColors.textSecondary,
+                                  style: TextStyle(
+                                    color: isDark ? AppColors.slate400 : AppColors.textSecondary,
                                     fontSize: 13,
                                   ),
                                 ),
@@ -241,39 +271,56 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 10,
-              offset: const Offset(0, -4),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: CustomButton(
-            text: 'Agendar Serviço',
-            icon: Icons.calendar_today,
-            onPressed: () => _showBookingDialog(),
-            backgroundColor: AppColors.serviceColor,
-            isFullWidth: true,
-          ),
-        ),
-      ),
+      bottomNavigationBar: !isOwner
+          ? Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.slate900 : AppColors.surface,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(isDark ? 0.3 : 0.08),
+                    blurRadius: 10,
+                    offset: const Offset(0, -4),
+                  ),
+                ],
+              ),
+              child: SafeArea(
+                child: CustomButton(
+                  text: 'Agendar Serviço',
+                  icon: Icons.calendar_today,
+                  onPressed: () => _showBookingDialog(),
+                  backgroundColor: AppColors.serviceColor,
+                  isFullWidth: true,
+                ),
+              ),
+            )
+          : null,
     );
   }
 
-  Widget _buildPlaceholder() {
+  Widget _buildPlaceholder(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      color: AppColors.serviceColor.withOpacity(0.1),
-      child: const Center(
-        child: Icon(
-          Icons.handyman,
-          size: 60,
-          color: AppColors.serviceColor,
+      color: isDark ? AppColors.slate800 : AppColors.slate200,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.image_not_supported_outlined,
+              size: 60,
+              color: isDark ? AppColors.slate500 : AppColors.slate400,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'No image',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: isDark ? AppColors.slate500 : AppColors.slate400,
+              ),
+            ),
+          ],
         ),
       ),
     );

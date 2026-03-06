@@ -10,12 +10,16 @@ class ProductCard extends StatelessWidget {
   final ProductModel product;
   final bool isCompact;
   final VoidCallback? onTap;
+  final bool showDeleteButton;
+  final VoidCallback? onDelete;
 
   const ProductCard({
     super.key,
     required this.product,
     this.isCompact = false,
     this.onTap,
+    this.showDeleteButton = false,
+    this.onDelete,
   });
 
   @override
@@ -24,13 +28,15 @@ class ProductCard extends StatelessWidget {
     
     return Material(
       color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap ??
-            () => AppRoutes.navigateTo(
-                  AppRoutes.productDetail,
-                  arguments: {'id': product.id},
-                ),
-        borderRadius: BorderRadius.circular(16),
+      child: Stack(
+        children: [
+          InkWell(
+            onTap: onTap ??
+                () => AppRoutes.navigateTo(
+                      AppRoutes.productDetail,
+                      arguments: {'id': product.id},
+                    ),
+            borderRadius: BorderRadius.circular(16),
         child: Container(
           decoration: BoxDecoration(
             color: isDark ? AppColors.slate800 : AppColors.surface,
@@ -48,14 +54,16 @@ class ProductCard extends StatelessWidget {
           ),
           clipBehavior: Clip.antiAlias,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              // Imagem
-              AspectRatio(
-                aspectRatio: isCompact ? 1.2 : 1,
+              // Imagem - ocupa toda a largura no topo
+              Expanded(
+                flex: 3,
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
+                    // Imagem principal
                     if (product.primaryImage != null)
                       ImageUtils.buildImage(
                         imageUrl: product.primaryImage!,
@@ -108,79 +116,127 @@ class ProductCard extends StatelessWidget {
                   ],
                 ),
               ),
-              // Content
+              // Content - dados organizados embaixo
               Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(isCompact ? 8 : 10),
+                flex: 2,
+                child: Container(
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      // Título
                       Flexible(
                         child: Text(
                           product.title,
                           style: TextStyle(
-                            fontSize: isCompact ? 12 : 13,
+                            fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color: isDark ? AppColors.slate100 : AppColors.textPrimary,
+                            height: 1.3,
                           ),
-                          maxLines: isCompact ? 1 : 2,
+                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 6),
+                      // Preço
                       Text(
                         Formatters.currency(product.price),
                         style: TextStyle(
-                          fontSize: isCompact ? 14 : 16,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.primary,
+                          color: AppColors.productColor,
                         ),
                       ),
-                      if (!isCompact) ...[
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.inventory_2_outlined,
-                              size: 12,
-                              color: isDark ? AppColors.slate400 : AppColors.textSecondary,
-                            ),
-                            const SizedBox(width: 4),
-                            Flexible(
-                              child: Text(
-                                '${product.quantityAvailable} disp.',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: isDark ? AppColors.slate400 : AppColors.textSecondary,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                      const SizedBox(height: 6),
+                      // Quantidade disponível
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.inventory_2_outlined,
+                            size: 14,
+                            color: isDark ? AppColors.slate400 : AppColors.textSecondary,
+                          ),
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              '${product.quantityAvailable} disp.',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: isDark ? AppColors.slate400 : AppColors.textSecondary,
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ],
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
               ),
             ],
           ),
-        ),
+            ),
+          ),
+          // Botão de deletar sobreposto (se necessário)
+          if (showDeleteButton && onDelete != null)
+            Positioned(
+              top: 8,
+              right: 8,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    if (onDelete != null) {
+                      onDelete!();
+                    }
+                  },
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.6),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.delete_outline,
+                      color: Colors.white,
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
 
   Widget _buildPlaceholder() {
     return Container(
-      color: AppColors.productColor.withOpacity(0.1),
-      child: const Center(
-        child: Icon(
-          Icons.shopping_bag_outlined,
-          size: 40,
-          color: AppColors.productColor,
+      color: AppColors.slate200,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.image_not_supported_outlined,
+              size: 40,
+              color: AppColors.slate400,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'No image',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: AppColors.slate400,
+              ),
+            ),
+          ],
         ),
       ),
     );

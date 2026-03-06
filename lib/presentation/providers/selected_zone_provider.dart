@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/services/location_service.dart';
+import '../../core/errors/exceptions.dart';
 import '../../data/models/zone_model.dart';
 import '../../data/repositories/zone_repository.dart';
 import '../../core/network/api_client.dart';
@@ -13,6 +14,7 @@ class SelectedZoneProvider extends ChangeNotifier {
   final LocationService _locationService = LocationService();
 
   List<ZoneModel> _allZones = [];
+  List<ZoneModel> _myPrivateZones = []; // Zonas privadas que o usuário tem acesso
   ZoneModel? _selectedZone;
   bool _isLoading = false;
   String? _error;
@@ -23,10 +25,14 @@ class SelectedZoneProvider extends ChangeNotifier {
 
   // Getters
   List<ZoneModel> get allZones => _allZones;
+  List<ZoneModel> get myPrivateZones => _myPrivateZones;
   ZoneModel? get selectedZone => _selectedZone;
   String? get selectedZoneId => _selectedZone?.id;
   bool get isLoading => _isLoading;
   String? get error => _error;
+  
+  /// Verifica se o usuário tem acesso a zonas privadas
+  bool get hasPrivateZones => _myPrivateZones.isNotEmpty;
 
   /// Inicializa: carrega zonas e detecta zona padrão
   Future<void> initialize() async {
@@ -192,6 +198,97 @@ class SelectedZoneProvider extends ChangeNotifier {
   /// Recarrega zonas e redetecta
   Future<void> refresh() async {
     await initialize();
+  }
+
+  /// Carrega zonas privadas que o usuário tem acesso
+  Future<void> loadMyPrivateZones() async {
+    try {
+      _myPrivateZones = await _zoneRepository.getMyZones();
+      notifyListeners();
+    } catch (e) {
+      // Ignora erro silenciosamente - usuário pode não estar logado
+    }
+  }
+
+  /// Entra em uma zona usando código de acesso
+  Future<({bool success, String message, ZoneModel? zone})> joinWithCode(String accessCode) async {
+    if (accessCode.isEmpty) {
+      return (success: false, message: 'Digite o código de acesso', zone: null);
+    }
+
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final result = await _zoneRepository.joinZoneWithCode(accessCode);
+      
+      final zone = result['zone'] != null 
+          ? ZoneModel.fromJson(result['zone'] as Map<String, dynamic>)
+          : null;
+      
+      if (zone != null) {
+        // Adiciona à lista de zonas privadas se não existir
+        if (!_myPrivateZones.any((z) => z.id == zone.id)) {
+          _myPrivateZones.add(zone);
+        }
+        
+        // Adiciona à lista geral se não existir
+        if (!_allZones.any((z) => z.id == zone.id)) {
+          _allZones.add(zone);
+        }
+        
+        // Seleciona a zona automaticamente
+        _selectedZone = zone;
+        await _saveSelectedZone(zone.id);
+      }
+
+      _isLoading = false;
+      notifyListeners();
+      
+      return (
+        success: result['success'] == true,
+        message: result['message'] as String? ?? 'Acesso concedido!',
+        zone: zone,
+      );
+    } on AppException catch (e) {
+      _error = e.message;
+      _isLoading = false;
+      notifyListeners();
+      return (success: false, message: e.message, zone: null);
+    } catch (e) {
+      _error = 'Erro ao entrar na zona';
+      _isLoading = false;
+      notifyListeners();
+      return (success: false, message: 'Erro ao entrar na zona', zone: null);
+    }
+  }
+
+  /// Sai de uma zona privada
+  Future<bool> leaveZone(String zoneId) async {
+    try {
+      await _zoneRepository.leaveZone(zoneId);
+      
+      // Remove da lista de zonas privadas
+      _myPrivateZones.removeWhere((z) => z.id == zoneId);
+      
+      // Se a zona selecionada for essa, limpa
+      if (_selectedZone?.id == zoneId) {
+        _selectedZone = null;
+        await clearSelectedZone();
+      }
+      
+      notifyListeners();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Verifica se o usuário tem acesso a uma zona específica
+  bool hasAccessTo(String zoneId) {
+    // Busca na lista geral (já filtrada pelo backend baseado no acesso do usuário)
+    return _allZones.any((z) => z.id == zoneId);
   }
 }
 

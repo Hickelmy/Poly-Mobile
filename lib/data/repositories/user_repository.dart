@@ -1,3 +1,4 @@
+import 'dart:io';
 import '../../core/constants/api_endpoints.dart';
 import '../../core/network/api_client.dart';
 import '../../core/errors/exceptions.dart';
@@ -140,6 +141,39 @@ class UserRepository {
     } catch (e) {
       throw AppException(
         message: 'Erro ao remover usuário',
+        details: e.toString(),
+      );
+    }
+  }
+
+  /// Faz upload de uma imagem e retorna a URL
+  Future<String> uploadImage(File imageFile) async {
+    try {
+      final response = await _apiClient.uploadFile<Map<String, dynamic>>(
+        ApiEndpoints.uploadImage,
+        filePath: imageFile.path,
+        fileFieldName: 'file',
+      );
+      
+      final data = response.data;
+      if (data != null) {
+        final fileUrl = data['fileUrl'] as String?;
+        if (fileUrl != null) {
+          // Monta a URL completa
+          final baseUrl = ApiEndpoints.baseUrl.replaceAll(RegExp(r'/$'), '');
+          return '$baseUrl$fileUrl';
+        }
+      }
+      
+      throw AppException(
+        message: 'Resposta inválida do servidor',
+        details: 'Formato de resposta inesperado',
+      );
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw AppException(
+        message: 'Erro ao fazer upload da imagem',
         details: e.toString(),
       );
     }

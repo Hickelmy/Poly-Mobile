@@ -10,12 +10,16 @@ class ServiceCard extends StatelessWidget {
   final ServiceModel service;
   final bool isCompact;
   final VoidCallback? onTap;
+  final bool showDeleteButton;
+  final VoidCallback? onDelete;
 
   const ServiceCard({
     super.key,
     required this.service,
     this.isCompact = false,
     this.onTap,
+    this.showDeleteButton = false,
+    this.onDelete,
   });
 
   @override
@@ -24,13 +28,15 @@ class ServiceCard extends StatelessWidget {
     
     return Material(
       color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap ??
-            () => AppRoutes.navigateTo(
-                  AppRoutes.serviceDetail,
-                  arguments: {'id': service.id},
-                ),
-        borderRadius: BorderRadius.circular(16),
+      child: Stack(
+        children: [
+          InkWell(
+            onTap: onTap ??
+                () => AppRoutes.navigateTo(
+                      AppRoutes.serviceDetail,
+                      arguments: {'id': service.id},
+                    ),
+            borderRadius: BorderRadius.circular(16),
         child: Container(
           decoration: BoxDecoration(
             color: isDark ? AppColors.slate800 : AppColors.surface,
@@ -203,7 +209,38 @@ class ServiceCard extends StatelessWidget {
               ),
             ],
           ),
-        ),
+            ),
+          ),
+          // Botão de deletar sobreposto (se necessário)
+          if (showDeleteButton && onDelete != null)
+            Positioned(
+              top: 8,
+              right: 8,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    if (onDelete != null) {
+                      onDelete!();
+                    }
+                  },
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.6),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.delete_outline,
+                      color: Colors.white,
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -223,12 +260,26 @@ class ServiceCard extends StatelessWidget {
 
   Widget _buildPlaceholder() {
     return Container(
-      color: AppColors.serviceColor.withOpacity(0.1),
-      child: const Center(
-        child: Icon(
-          Icons.handyman,
-          size: 40,
-          color: AppColors.serviceColor,
+      color: AppColors.slate200,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.image_not_supported_outlined,
+              size: 40,
+              color: AppColors.slate400,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'No image',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: AppColors.slate400,
+              ),
+            ),
+          ],
         ),
       ),
     );

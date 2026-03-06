@@ -149,5 +149,58 @@ class ZoneRepository {
   Future<ZoneModel> toggleZoneActive(String id, bool active) async {
     return updateZone(id, {'active': active});
   }
+
+  /// Entra em uma zona usando código de acesso
+  Future<Map<String, dynamic>> joinZoneWithCode(String accessCode) async {
+    try {
+      final response = await _apiClient.post(
+        ApiEndpoints.joinZone,
+        data: {'access_code': accessCode.toUpperCase()},
+      );
+      return response.data as Map<String, dynamic>;
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw AppException(
+        message: 'Erro ao entrar na zona',
+        details: e.toString(),
+      );
+    }
+  }
+
+  /// Lista zonas que o usuário tem acesso
+  Future<List<ZoneModel>> getMyZones() async {
+    try {
+      final response = await _apiClient.get(ApiEndpoints.myZones);
+      
+      final data = response.data;
+      if (data is List) {
+        return data.map((json) => ZoneModel.fromJson(json)).toList();
+      }
+      
+      return [];
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw AppException(
+        message: 'Erro ao listar suas zonas',
+        details: e.toString(),
+      );
+    }
+  }
+
+  /// Sai de uma zona
+  Future<void> leaveZone(String zoneId) async {
+    try {
+      await _apiClient.delete(ApiEndpoints.leaveZone(zoneId));
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw AppException(
+        message: 'Erro ao sair da zona',
+        details: e.toString(),
+      );
+    }
+  }
 }
 

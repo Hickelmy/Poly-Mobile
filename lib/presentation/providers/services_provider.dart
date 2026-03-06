@@ -17,8 +17,11 @@ class ServicesProvider extends ChangeNotifier {
 
   // Filtros
   String? _serviceTypeFilter;
-  String? _zoneFilter;
-  String _sortBy = 'rating';
+  String _sortBy = 'proximity'; // Padrão: ordenar por proximidade
+  
+  // Localização do usuário para ordenação por proximidade
+  double? _userLat;
+  double? _userLng;
 
   ServicesProvider({required ApiClient apiClient}) : _apiClient = apiClient {
     _serviceRepository = ServiceRepository(apiClient: _apiClient);
@@ -32,10 +35,17 @@ class ServicesProvider extends ChangeNotifier {
   String? get error => _error;
 
   String? get serviceTypeFilter => _serviceTypeFilter;
-  String? get zoneFilter => _zoneFilter;
   String get sortBy => _sortBy;
+  double? get userLat => _userLat;
+  double? get userLng => _userLng;
 
-  /// Carrega lista de serviços
+  /// Define a localização do usuário para ordenação por proximidade
+  void setUserLocation(double? lat, double? lng) {
+    _userLat = lat;
+    _userLng = lng;
+  }
+
+  /// Carrega lista de serviços ordenados por proximidade
   Future<void> loadServices({bool refresh = false}) async {
     if (_isLoading) return;
 
@@ -47,9 +57,10 @@ class ServicesProvider extends ChangeNotifier {
     try {
       _services = await _serviceRepository.getServices(
         serviceType: _serviceTypeFilter,
-        zoneId: _zoneFilter,
         sort: _sortBy,
         active: true,
+        userLat: _userLat,
+        userLng: _userLng,
       );
     } on AppException catch (e) {
       _error = e.message;
@@ -226,12 +237,6 @@ class ServicesProvider extends ChangeNotifier {
     loadServices(refresh: true);
   }
 
-  void setZoneFilter(String? zoneId) {
-    if (_zoneFilter == zoneId) return;
-    _zoneFilter = zoneId;
-    // Não recarrega automaticamente - deixa a tela fazer isso
-  }
-
   void setSortBy(String sort) {
     _sortBy = sort;
     loadServices(refresh: true);
@@ -239,8 +244,7 @@ class ServicesProvider extends ChangeNotifier {
 
   void clearFilters() {
     _serviceTypeFilter = null;
-    _zoneFilter = null;
-    _sortBy = 'rating';
+    _sortBy = 'proximity';
     loadServices(refresh: true);
   }
 

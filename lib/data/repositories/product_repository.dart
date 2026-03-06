@@ -19,6 +19,8 @@ class ProductRepository {
     int? limit,
     int? offset,
     String? sellerId,
+    double? userLat,
+    double? userLng,
   }) async {
     try {
       final queryParams = <String, dynamic>{};
@@ -30,6 +32,8 @@ class ProductRepository {
       if (limit != null) queryParams['limit'] = limit;
       if (offset != null) queryParams['offset'] = offset;
       if (sellerId != null) queryParams['seller_id'] = sellerId;
+      if (userLat != null) queryParams['user_lat'] = userLat;
+      if (userLng != null) queryParams['user_lng'] = userLng;
 
       final response = await _apiClient.get(
         ApiEndpoints.products,

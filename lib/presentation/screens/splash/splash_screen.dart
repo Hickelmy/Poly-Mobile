@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/asset_paths.dart';
 import '../../../routes/app_routes.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/selected_zone_provider.dart';
@@ -122,11 +123,10 @@ class _SplashScreenState extends State<SplashScreen>
                     children: [
                       // Logo
                       Container(
-                        width: 120,
-                        height: 120,
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.2),
@@ -135,29 +135,26 @@ class _SplashScreenState extends State<SplashScreen>
                             ),
                           ],
                         ),
-                        child: const Center(
-                          child: Text(
-                            'P',
-                            style: TextStyle(
-                              fontSize: 64,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primary,
-                            ),
-                          ),
+                        child: Image.asset(
+                          AssetPaths.logo,
+                          width: 220,
+                          height: 85,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) {
+                            // Fallback se a imagem não carregar
+                            return const Text(
+                              'POLYS',
+                              style: TextStyle(
+                                fontSize: 42,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primary,
+                                letterSpacing: 4,
+                              ),
+                            );
+                          },
                         ),
                       ),
                       const SizedBox(height: 24),
-                      // Nome do app
-                      const Text(
-                        'POLYS',
-                        style: TextStyle(
-                          fontSize: 42,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          letterSpacing: 8,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
                       // Tagline
                       Text(
                         'Conectando comunidades',

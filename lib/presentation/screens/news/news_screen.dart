@@ -307,21 +307,16 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                         CircleAvatar(
                           radius: 16,
                           backgroundColor: AppColors.primary,
-                          backgroundImage: news.author!.avatarUrl != null
-                              ? NetworkImage(news.author!.avatarUrl!)
-                              : null,
-                          child: news.author!.avatarUrl == null
-                              ? Text(
-                                  news.author!.name.isNotEmpty
-                                      ? news.author!.name[0].toUpperCase()
-                                      : 'A',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              : null,
+                          child: Text(
+                            news.author!.name.isNotEmpty
+                                ? news.author!.name[0].toUpperCase()
+                                : 'A',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -582,27 +577,22 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 14,
-                backgroundColor: AppColors.primary,
-                backgroundImage: comment.user?.avatarUrl != null
-                    ? NetworkImage(comment.user!.avatarUrl!)
-                    : null,
-                child: comment.user?.avatarUrl == null
-                    ? Text(
-                        comment.user?.name.isNotEmpty == true
-                            ? comment.user!.name[0].toUpperCase()
-                            : 'U',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    : null,
-              ),
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 14,
+                  backgroundColor: AppColors.primary,
+                  child: Text(
+                    comment.user?.name.isNotEmpty == true
+                        ? comment.user!.name[0].toUpperCase()
+                        : 'U',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(

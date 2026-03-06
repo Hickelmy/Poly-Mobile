@@ -5,6 +5,7 @@ import '../../../core/utils/formatters.dart';
 import '../../../core/utils/helpers.dart';
 import '../../../core/utils/image_utils.dart';
 import '../../providers/products_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../widgets/common/loading_widget.dart';
 import '../../widgets/common/error_widget.dart';
 import '../../widgets/common/custom_button.dart';
@@ -26,18 +27,28 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _loadProduct();
+    // Aguarda o frame para evitar setState durante build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadProduct();
+    });
   }
 
   Future<void> _loadProduct() async {
+    if (!mounted) return;
     await context.read<ProductsProvider>().loadProductDetails(widget.productId);
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<ProductsProvider>();
+    final authProvider = context.watch<AuthProvider>();
     final product = provider.selectedProduct;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    // Verifica se o usuário atual é o dono do produto
+    final isOwner = product?.sellerId != null && 
+                    authProvider.user?.id != null &&
+                    product!.sellerId == authProvider.user!.id;
 
     if (provider.isLoading && product == null) {
       return Scaffold(
@@ -69,15 +80,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           SliverAppBar(
             expandedHeight: 300,
             pinned: true,
+            backgroundColor: isDark ? AppColors.slate900 : AppColors.surface,
+            iconTheme: IconThemeData(
+              color: isDark ? AppColors.slate100 : AppColors.textPrimary,
+            ),
             flexibleSpace: FlexibleSpaceBar(
               background: product.primaryImage != null
                   ? ImageUtils.buildImage(
                       imageUrl: product.primaryImage!,
                       fit: BoxFit.cover,
-                      placeholder: _buildPlaceholder(),
-                      errorWidget: _buildPlaceholder(),
+                      placeholder: _buildPlaceholder(context),
+                      errorWidget: _buildPlaceholder(context),
                     )
-                  : _buildPlaceholder(),
+                  : _buildPlaceholder(context),
             ),
           ),
           SliverPadding(
@@ -108,9 +123,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 // Título
                 Text(
                   product.title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
+                    color: isDark ? AppColors.slate100 : AppColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -127,52 +143,59 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 // Quantidade
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.inventory_2_outlined,
                       size: 18,
-                      color: AppColors.textSecondary,
+                      color: isDark ? AppColors.slate400 : AppColors.textSecondary,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       '${product.quantityAvailable} unidades disponíveis',
-                      style: const TextStyle(color: AppColors.textSecondary),
+                      style: TextStyle(
+                        color: isDark ? AppColors.slate400 : AppColors.textSecondary,
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 24),
                 // Descrição
-                const Text(
+                Text(
                   'Descrição',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
+                    color: isDark ? AppColors.slate100 : AppColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   product.description ?? 'Sem descrição',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
-                    color: AppColors.textSecondary,
+                    color: isDark ? AppColors.slate300 : AppColors.textSecondary,
                     height: 1.5,
                   ),
                 ),
                 const SizedBox(height: 24),
                 // Vendedor
                 if (product.sellerName != null) ...[
-                  const Text(
+                  Text(
                     'Vendedor',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      color: isDark ? AppColors.slate100 : AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceVariant,
+                      color: isDark ? AppColors.slate800 : AppColors.surfaceVariant,
                       borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isDark ? AppColors.slate700 : AppColors.border,
+                      ),
                     ),
                     child: Row(
                       children: [
@@ -180,13 +203,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           backgroundColor: AppColors.productColor,
                           child: Text(
                             Helpers.getInitials(product.sellerName!),
-                            style: const TextStyle(color: Colors.white),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 12),
                         Text(
                           product.sellerName!,
-                          style: const TextStyle(fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: isDark ? AppColors.slate100 : AppColors.textPrimary,
+                          ),
                         ),
                       ],
                     ),
@@ -198,52 +227,69 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 10,
-              offset: const Offset(0, -4),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: Row(
-            children: [
-              Expanded(
-                child: CustomButton(
-                  text: 'Entrar em Contato',
-                  icon: Icons.chat_outlined,
-                  onPressed: () {
-                    if (product.sellerEmail != null) {
-                      Helpers.openWhatsApp(
-                        product.sellerEmail!,
-                        message:
-                            'Olá! Vi seu produto "${product.title}" no POLYS.',
-                      );
-                    }
-                  },
-                  backgroundColor: AppColors.productColor,
+      bottomNavigationBar: !isOwner
+          ? Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.slate900 : AppColors.surface,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(isDark ? 0.3 : 0.08),
+                    blurRadius: 10,
+                    offset: const Offset(0, -4),
+                  ),
+                ],
+              ),
+              child: SafeArea(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: CustomButton(
+                        text: 'Entrar em Contato',
+                        icon: Icons.chat_outlined,
+                        onPressed: () {
+                          if (product.sellerEmail != null) {
+                            Helpers.openWhatsApp(
+                              product.sellerEmail!,
+                              message:
+                                  'Olá! Vi seu produto "${product.title}" no POLYS.',
+                            );
+                          }
+                        },
+                        backgroundColor: AppColors.productColor,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            )
+          : null,
     );
   }
 
-  Widget _buildPlaceholder() {
+  Widget _buildPlaceholder(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      color: AppColors.productColor.withOpacity(0.1),
-      child: const Center(
-        child: Icon(
-          Icons.shopping_bag_outlined,
-          size: 60,
-          color: AppColors.productColor,
+      color: isDark ? AppColors.slate800 : AppColors.slate200,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.image_not_supported_outlined,
+              size: 60,
+              color: isDark ? AppColors.slate500 : AppColors.slate400,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'No image',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: isDark ? AppColors.slate500 : AppColors.slate400,
+              ),
+            ),
+          ],
         ),
       ),
     );

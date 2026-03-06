@@ -18,8 +18,11 @@ class ProductsProvider extends ChangeNotifier {
   // Filtros
   String? _categoryFilter;
   String? _conditionFilter;
-  String? _zoneFilter;
-  String _sortBy = 'recent';
+  String _sortBy = 'proximity'; // Padrão: ordenar por proximidade
+  
+  // Localização do usuário para ordenação por proximidade
+  double? _userLat;
+  double? _userLng;
 
   ProductsProvider({required ApiClient apiClient}) : _apiClient = apiClient {
     _productRepository = ProductRepository(apiClient: _apiClient);
@@ -34,10 +37,17 @@ class ProductsProvider extends ChangeNotifier {
 
   String? get categoryFilter => _categoryFilter;
   String? get conditionFilter => _conditionFilter;
-  String? get zoneFilter => _zoneFilter;
   String get sortBy => _sortBy;
+  double? get userLat => _userLat;
+  double? get userLng => _userLng;
 
-  /// Carrega lista de produtos
+  /// Define a localização do usuário para ordenação por proximidade
+  void setUserLocation(double? lat, double? lng) {
+    _userLat = lat;
+    _userLng = lng;
+  }
+
+  /// Carrega lista de produtos ordenados por proximidade
   Future<void> loadProducts({bool refresh = false}) async {
     if (_isLoading) return;
 
@@ -50,9 +60,10 @@ class ProductsProvider extends ChangeNotifier {
       _products = await _productRepository.getProducts(
         category: _categoryFilter,
         condition: _conditionFilter,
-        zoneId: _zoneFilter,
         sort: _sortBy,
         active: true,
+        userLat: _userLat,
+        userLng: _userLng,
       );
     } on AppException catch (e) {
       _error = e.message;
@@ -244,12 +255,6 @@ class ProductsProvider extends ChangeNotifier {
     loadProducts(refresh: true);
   }
 
-  void setZoneFilter(String? zoneId) {
-    if (_zoneFilter == zoneId) return;
-    _zoneFilter = zoneId;
-    // Não recarrega automaticamente - deixa a tela fazer isso
-  }
-
   void setSortBy(String sort) {
     _sortBy = sort;
     loadProducts(refresh: true);
@@ -258,8 +263,7 @@ class ProductsProvider extends ChangeNotifier {
   void clearFilters() {
     _categoryFilter = null;
     _conditionFilter = null;
-    _zoneFilter = null;
-    _sortBy = 'recent';
+    _sortBy = 'proximity';
     loadProducts(refresh: true);
   }
 

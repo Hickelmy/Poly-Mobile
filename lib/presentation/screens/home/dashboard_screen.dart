@@ -130,18 +130,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           child: CircleAvatar(
                             radius: 20,
                             backgroundColor: AppColors.primary,
-                            backgroundImage: user?.avatarUrl != null
-                                ? NetworkImage(user!.avatarUrl!)
-                                : null,
-                            child: user?.avatarUrl == null
-                                ? Text(
-                                    Helpers.getInitials(user?.name ?? 'U'),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  )
-                                : null,
+                            child: Text(
+                              Helpers.getInitials(user?.name ?? 'U'),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -278,14 +273,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             Expanded(
               child: _QuickActionCard(
+                icon: Icons.handyman,
+                label: 'Adicionar Serviço',
+                color: AppColors.serviceColor,
+                onTap: () => AppRoutes.navigateTo(AppRoutes.sellerDashboard),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _QuickActionCard(
                 icon: Icons.support_agent,
                 label: 'Abrir Chamado',
                 color: AppColors.info,
                 onTap: () {},
               ),
             ),
-            const SizedBox(width: 12),
-            if (authProvider.canCreateProjects)
+          ],
+        ),
+        if (authProvider.canCreateProjects) ...[
+          const SizedBox(height: 12),
+          Row(
+            children: [
               Expanded(
                 child: _QuickActionCard(
                   icon: Icons.add_task,
@@ -293,11 +301,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   color: AppColors.primary,
                   onTap: () => AppRoutes.navigateTo(AppRoutes.createProject),
                 ),
-              )
-            else
+              ),
+              const SizedBox(width: 12),
               const Expanded(child: SizedBox()),
-          ],
-        ),
+            ],
+          ),
+        ],
       ],
     );
   }
