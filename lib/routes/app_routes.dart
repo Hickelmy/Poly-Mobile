@@ -8,6 +8,7 @@ import '../presentation/screens/projects/project_detail_screen.dart';
 import '../presentation/screens/projects/create_project_screen.dart';
 import '../presentation/screens/store/store_screen.dart';
 import '../presentation/screens/store/product_detail_screen.dart';
+import '../presentation/screens/store/create_product_screen.dart';
 import '../presentation/screens/services/services_screen.dart';
 import '../presentation/screens/services/service_detail_screen.dart';
 import '../presentation/screens/profile/profile_screen.dart';
@@ -36,6 +37,7 @@ class AppRoutes {
   static const String createProject = '/create-project';
   static const String store = '/store';
   static const String productDetail = '/product';
+  static const String createProduct = '/create-product';
   static const String services = '/services';
   static const String serviceDetail = '/service';
   static const String profile = '/profile';
@@ -86,6 +88,9 @@ class AppRoutes {
           ProductDetailScreen(productId: args?['id'] ?? ''),
           settings,
         );
+
+      case createProduct:
+        return _slideRoute(const CreateProductScreen(), settings);
 
       case services:
         return _slideRoute(const ServicesScreen(), settings);
