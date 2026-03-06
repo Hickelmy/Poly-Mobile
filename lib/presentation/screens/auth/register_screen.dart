@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
+import '../../../core/constants/asset_paths.dart';
 import '../../../core/utils/validators.dart';
 import '../../../routes/app_routes.dart';
 import '../../providers/auth_provider.dart';
@@ -113,30 +114,46 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Logo
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        gradient: AppColors.primaryGradient,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.primary.withOpacity(0.3),
-                            blurRadius: 16,
-                            offset: const Offset(0, 6),
+                    Builder(
+                      builder: (context) {
+                        final isDark =
+                            Theme.of(context).brightness == Brightness.dark;
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: isDark ? AppColors.slate800 : Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primary
+                                    .withOpacity(isDark ? 0.2 : 0.15),
+                                blurRadius: 16,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'P',
-                          style: TextStyle(
-                            fontSize: 42,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                          child: Image.asset(
+                            AssetPaths.logo,
+                            width: 140,
+                            height: 54,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Text(
+                                'POLYS',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color: isDark
+                                      ? AppColors.slate50
+                                      : AppColors.primary,
+                                  letterSpacing: 4,
+                                ),
+                              );
+                            },
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 20),
                     // Título
@@ -343,6 +360,74 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           onPressed: _handleRegister,
                           isLoading: auth.isLoading,
                           isFullWidth: true,
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Divider
+                    Builder(
+                      builder: (context) {
+                        final isDark = Theme.of(context).brightness == Brightness.dark;
+                        return Row(
+                          children: [
+                            Expanded(child: Divider(color: isDark ? AppColors.slate700 : AppColors.slate300)),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: Text(
+                                'ou',
+                                style: TextStyle(
+                                  color: isDark ? AppColors.slate500 : AppColors.slate400,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                            Expanded(child: Divider(color: isDark ? AppColors.slate700 : AppColors.slate300)),
+                          ],
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Botão Google
+                    Consumer<AuthProvider>(
+                      builder: (context, auth, _) {
+                        final isDark = Theme.of(context).brightness == Brightness.dark;
+                        return SizedBox(
+                          width: double.infinity,
+                          height: 48,
+                          child: OutlinedButton.icon(
+                            onPressed: auth.isLoading ? null : () async {
+                              final success = await auth.loginWithGoogle();
+                              if (!mounted) return;
+                              if (success) {
+                                AppRoutes.navigateAndClear(AppRoutes.main);
+                              } else if (auth.error != null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(auth.error!),
+                                    backgroundColor: AppColors.error,
+                                  ),
+                                );
+                              }
+                            },
+                            icon: Image.network(
+                              'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg',
+                              width: 20,
+                              height: 20,
+                              errorBuilder: (_, __, ___) => const Icon(Icons.g_mobiledata, size: 24),
+                            ),
+                            label: const Text('Criar conta com Google'),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: isDark ? AppColors.slate200 : AppColors.slate700,
+                              side: BorderSide(
+                                color: isDark ? AppColors.slate700 : AppColors.slate300,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
                         );
                       },
                     ),

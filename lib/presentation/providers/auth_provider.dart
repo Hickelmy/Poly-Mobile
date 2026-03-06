@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../../core/network/api_client.dart';
 import '../../core/storage/secure_storage.dart';
 import '../../core/errors/exceptions.dart';
+import '../../core/services/firebase_auth_service.dart';
 import '../../data/models/user_model.dart';
 import '../../data/repositories/auth_repository.dart';
 
@@ -24,6 +25,8 @@ class AuthProvider extends ChangeNotifier {
   UserModel? _user;
   String? _error;
   bool _isInitialized = false;
+
+  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
 
   AuthProvider({
     required ApiClient apiClient,
@@ -102,9 +105,9 @@ class AuthProvider extends ChangeNotifier {
         password: password,
       );
 
-      // Salva sessão
       await _secureStorage.saveSession(
         token: result.token,
+        refreshToken: result.refreshToken,
         userId: result.user.id,
         email: result.user.email,
         role: result.user.role,
@@ -154,9 +157,9 @@ class AuthProvider extends ChangeNotifier {
         password: password,
       );
 
-      // Salva sessão
       await _secureStorage.saveSession(
         token: result.token,
+        refreshToken: result.refreshToken,
         userId: result.user.id,
         email: result.user.email,
         role: result.user.role,
@@ -189,15 +192,66 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  /// Login com Google via Firebase
+  Future<bool> loginWithGoogle() async {
+    _status = AuthStatus.loading;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final googleResult = await _firebaseAuthService.signInWithGoogle();
+
+      final result = await _authRepository.loginWithGoogle(
+        idToken: googleResult.idToken,
+      );
+
+      await _secureStorage.saveSession(
+        token: result.token,
+        refreshToken: result.refreshToken,
+        userId: result.user.id,
+        email: result.user.email,
+        role: result.user.role,
+      );
+
+      _user = result.user;
+      _status = AuthStatus.authenticated;
+      notifyListeners();
+      return true;
+    } on NetworkException {
+      _error = 'Não foi possível conectar ao servidor.';
+      _status = AuthStatus.error;
+      notifyListeners();
+      return false;
+    } on AppException catch (e) {
+      _error = e.message;
+      _status = AuthStatus.error;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      final msg = e.toString();
+      if (msg.contains('cancelado')) {
+        _status = AuthStatus.unauthenticated;
+        notifyListeners();
+        return false;
+      }
+      _error = 'Erro ao fazer login com Google.';
+      _status = AuthStatus.error;
+      notifyListeners();
+      return false;
+    }
+  }
+
   /// Realiza logout
   Future<void> logout() async {
     _status = AuthStatus.loading;
     notifyListeners();
 
     try {
-      await _authRepository.logout();
+      final refreshToken = await _secureStorage.getRefreshToken();
+      await _authRepository.logout(refreshToken: refreshToken);
+      await _firebaseAuthService.signOut();
     } catch (_) {
-      // Ignora erros de logout na API
+      // Ignora erros de logout
     }
 
     await _secureStorage.clearSession();

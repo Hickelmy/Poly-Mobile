@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
+import '../../../core/constants/asset_paths.dart';
 import '../../../core/utils/validators.dart';
 import '../../../routes/app_routes.dart';
 import '../../providers/auth_provider.dart';
@@ -105,42 +106,39 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     // Logo
                     Container(
-                      width: 100,
-                      height: 100,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
-                        gradient: AppColors.primaryGradient,
-                        borderRadius: BorderRadius.circular(25),
+                        color: isDark ? AppColors.slate800 : Colors.white,
+                        borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.primary.withOpacity(0.3),
+                            color: AppColors.primary.withOpacity(isDark ? 0.2 : 0.15),
                             blurRadius: 20,
                             offset: const Offset(0, 8),
                           ),
                         ],
                       ),
-                      child: const Center(
-                        child: Text(
-                          'P',
-                          style: TextStyle(
-                            fontSize: 52,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
+                      child: Image.asset(
+                        AssetPaths.logo,
+                        width: 180,
+                        height: 70,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          // Fallback se a imagem não carregar
+                          return Text(
+                            'POLYS',
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? AppColors.slate50 : AppColors.primary,
+                              letterSpacing: 4,
+                            ),
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(height: 24),
-                    // Título
-                    Text(
-                      'POLYS',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: isDark ? AppColors.slate50 : AppColors.slate900,
-                        letterSpacing: 4,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
+                    // Subtítulo
                     Text(
                       'Entre na sua conta',
                       style: TextStyle(
@@ -201,6 +199,68 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: _handleLogin,
                           isLoading: auth.isLoading,
                           isFullWidth: true,
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Divider
+                    Row(
+                      children: [
+                        Expanded(child: Divider(color: isDark ? AppColors.slate700 : AppColors.slate300)),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            'ou',
+                            style: TextStyle(
+                              color: isDark ? AppColors.slate500 : AppColors.slate400,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                        Expanded(child: Divider(color: isDark ? AppColors.slate700 : AppColors.slate300)),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Botão Google
+                    Consumer<AuthProvider>(
+                      builder: (context, auth, _) {
+                        return SizedBox(
+                          width: double.infinity,
+                          height: 48,
+                          child: OutlinedButton.icon(
+                            onPressed: auth.isLoading ? null : () async {
+                              final success = await auth.loginWithGoogle();
+                              if (!mounted) return;
+                              if (success) {
+                                AppRoutes.navigateAndClear(AppRoutes.main);
+                              } else if (auth.error != null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(auth.error!),
+                                    backgroundColor: AppColors.error,
+                                  ),
+                                );
+                              }
+                            },
+                            icon: Image.network(
+                              'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg',
+                              width: 20,
+                              height: 20,
+                              errorBuilder: (_, __, ___) => const Icon(Icons.g_mobiledata, size: 24),
+                            ),
+                            label: const Text('Entrar com Google'),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: isDark ? AppColors.slate200 : AppColors.slate700,
+                              side: BorderSide(
+                                color: isDark ? AppColors.slate700 : AppColors.slate300,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
                         );
                       },
                     ),

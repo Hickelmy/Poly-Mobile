@@ -3,13 +3,11 @@ import '../../core/network/api_client.dart';
 import '../../core/errors/exceptions.dart';
 import '../models/user_model.dart';
 
-/// Repositório de autenticação
 class AuthRepository {
   final ApiClient _apiClient;
 
   AuthRepository({required ApiClient apiClient}) : _apiClient = apiClient;
 
-  /// Realiza login e retorna token + usuário
   Future<AuthResult> login({
     required String email,
     required String password,
@@ -24,13 +22,7 @@ class AuthRepository {
       );
 
       final data = response.data as Map<String, dynamic>;
-      final token = data['access_token'] as String;
-      final userData = data['user'] as Map<String, dynamic>;
-
-      return AuthResult(
-        token: token,
-        user: UserModel.fromJson(userData),
-      );
+      return AuthResult.fromJson(data);
     } on AppException {
       rethrow;
     } catch (e) {
@@ -41,7 +33,6 @@ class AuthRepository {
     }
   }
 
-  /// Realiza cadastro e retorna token + usuário
   Future<AuthResult> register({
     required String name,
     required String email,
@@ -59,18 +50,11 @@ class AuthRepository {
       );
 
       final data = response.data as Map<String, dynamic>;
-      
-      // Verifica se retorna token diretamente ou se precisa fazer login
+
       if (data.containsKey('access_token')) {
-        final token = data['access_token'] as String;
-        final userData = data['user'] as Map<String, dynamic>;
-        return AuthResult(
-          token: token,
-          user: UserModel.fromJson(userData),
-        );
+        return AuthResult.fromJson(data);
       }
-      
-      // Se não retorna token, faz login automaticamente
+
       return await login(email: email, password: password);
     } on AppException {
       rethrow;
@@ -82,7 +66,6 @@ class AuthRepository {
     }
   }
 
-  /// Obtém dados do usuário atual
   Future<UserModel> getCurrentUser() async {
     try {
       final response = await _apiClient.get(ApiEndpoints.currentUser);
@@ -97,24 +80,53 @@ class AuthRepository {
     }
   }
 
-  /// Realiza logout (opcional, dependendo da API)
-  Future<void> logout() async {
+  Future<AuthResult> loginWithGoogle({required String idToken}) async {
     try {
-      await _apiClient.post(ApiEndpoints.logout);
+      final response = await _apiClient.post(
+        '/auth/google',
+        data: {'idToken': idToken},
+      );
+
+      final data = response.data as Map<String, dynamic>;
+      return AuthResult.fromJson(data);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw AppException(
+        message: 'Erro ao fazer login com Google',
+        details: e.toString(),
+      );
+    }
+  }
+
+  Future<void> logout({String? refreshToken}) async {
+    try {
+      await _apiClient.post(
+        ApiEndpoints.logout,
+        data: refreshToken != null ? {'refresh_token': refreshToken} : null,
+      );
     } catch (_) {
       // Ignora erros de logout
     }
   }
 }
 
-/// Resultado da autenticação
 class AuthResult {
   final String token;
+  final String? refreshToken;
   final UserModel user;
 
   AuthResult({
     required this.token,
+    this.refreshToken,
     required this.user,
   });
-}
 
+  factory AuthResult.fromJson(Map<String, dynamic> data) {
+    return AuthResult(
+      token: data['access_token'] as String,
+      refreshToken: data['refresh_token'] as String?,
+      user: UserModel.fromJson(data['user'] as Map<String, dynamic>),
+    );
+  }
+}
