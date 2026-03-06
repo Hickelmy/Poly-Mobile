@@ -2,9 +2,12 @@
 class AssetPaths {
   AssetPaths._();
   
+  // ============ LOGO ============
+  static const String logoPath = 'assets/logo';
+  static const String logo = '$logoPath/Polys_Logo.png';
+  
   // ============ IMAGES ============
   static const String imagesPath = 'assets/images';
-  static const String logo = '$imagesPath/logo.png';
   static const String logoWhite = '$imagesPath/logo_white.png';
   static const String logoIcon = '$imagesPath/logo_icon.png';
   static const String placeholder = '$imagesPath/placeholder.png';

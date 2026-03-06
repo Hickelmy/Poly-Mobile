@@ -210,5 +210,26 @@ class Formatters {
     }
     return '${meters.round()} m';
   }
+  
+  // ============ FORMATADORES DE CHAVE PIX ============
+  
+  /// Formata chave PIX aleatória (UUID)
+  /// Ex: 1234567890abcdef1234567890abcdef => 12345678-90ab-cdef-1234-567890abcdef
+  static String pixKeyRandom(String value) {
+    // Remove formatação existente
+    final clean = value.replaceAll(RegExp(r'[-\s]'), '').toUpperCase();
+    
+    if (clean.length != 32) {
+      return value; // Retorna original se não tiver 32 caracteres
+    }
+    
+    // Formata como UUID: 8-4-4-4-12
+    return '${clean.substring(0, 8)}-${clean.substring(8, 12)}-${clean.substring(12, 16)}-${clean.substring(16, 20)}-${clean.substring(20)}';
+  }
+  
+  /// Remove formatação de chave PIX aleatória
+  static String pixKeyRandomUnformat(String value) {
+    return value.replaceAll(RegExp(r'[-\s]'), '').toUpperCase();
+  }
 }
 

@@ -242,6 +242,82 @@ class Validators {
     return null;
   }
   
+  /// Valida chave PIX aleatória (UUID format)
+  static String? pixKeyRandom(String? value) {
+    if (value == null || value.isEmpty) {
+      return null; // Opcional
+    }
+    
+    // Remove formatação (hífens e espaços)
+    final clean = value.replaceAll(RegExp(r'[-\s]'), '');
+    
+    // UUID deve ter 32 caracteres hexadecimais
+    if (clean.length != 32) {
+      return 'Chave PIX aleatória deve ter 32 caracteres';
+    }
+    
+    // Valida se é hexadecimal
+    if (!RegExp(r'^[0-9A-Fa-f]{32}$').hasMatch(clean)) {
+      return 'Chave PIX aleatória inválida';
+    }
+    
+    return null;
+  }
+  
+  /// Valida chave PIX por telefone
+  static String? pixKeyPhone(String? value) {
+    if (value == null || value.isEmpty) {
+      return null; // Opcional
+    }
+    
+    return phone(value);
+  }
+  
+  /// Valida chave PIX por email
+  static String? pixKeyEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return null; // Opcional
+    }
+    
+    return email(value);
+  }
+  
+  /// Valida chave PIX por CPF
+  static String? pixKeyCpf(String? value) {
+    if (value == null || value.isEmpty) {
+      return null; // Opcional
+    }
+    
+    return cpf(value);
+  }
+  
+  /// Valida telefone (versão opcional)
+  static String? phoneOptional(String? value) {
+    if (value == null || value.isEmpty) {
+      return null; // Opcional
+    }
+    
+    return phone(value);
+  }
+  
+  /// Valida CPF (versão opcional)
+  static String? cpfOptional(String? value) {
+    if (value == null || value.isEmpty) {
+      return null; // Opcional
+    }
+    
+    return cpf(value);
+  }
+  
+  /// Valida email (versão opcional)
+  static String? emailOptional(String? value) {
+    if (value == null || value.isEmpty) {
+      return null; // Opcional
+    }
+    
+    return email(value);
+  }
+
   /// Combina múltiplos validadores
   static String? combine(List<String? Function()> validators) {
     for (final validator in validators) {

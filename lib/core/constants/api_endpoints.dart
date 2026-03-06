@@ -43,6 +43,7 @@ class ApiEndpoints {
   static String get users => _endpoint('/users');
   static String get currentUser => _endpoint('/users/me');
   static String userById(String id) => _endpoint('/users/$id');
+  static String get uploadImage => _endpoint('/users/upload');
 
   // ============ PROJECTS ============
   static String get projects => _endpoint('/projects');
@@ -68,12 +69,16 @@ class ApiEndpoints {
   static String get zones => _endpoint('/zones');
   static String zoneById(String id) => _endpoint('/zones/$id');
   static String zoneStats(String id) => _endpoint('/zones/$id/stats');
+  static String get joinZone => _endpoint('/zones/join');
+  static String get myZones => _endpoint('/zones/my-zones');
+  static String leaveZone(String id) => _endpoint('/zones/leave/$id');
 
   // ============ SETTINGS ============
   static String get settings => _endpoint('/settings');
 
   // ============ PAYMENT GATEWAY ============
   static String get createPix => _endpoint('/payment-gateway/create-pix');
+  static String get createStripe => _endpoint('/payment-gateway/create-stripe');
   static String get generateQrCode =>
       _endpoint('/payment-gateway/generate-qrcode');
   static String paymentStatus(String id) =>

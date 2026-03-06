@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'app.dart';
 import 'presentation/providers/auth_provider.dart';
@@ -18,6 +19,13 @@ import 'core/network/api_client.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Inicializar Firebase
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    debugPrint('Firebase initialization skipped: $e');
+  }
   
   // Inicializar locale data para formatação de datas
   await initializeDateFormatting('pt_BR', null);
